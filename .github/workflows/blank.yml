@@ -1,35 +1,127 @@
 # 📌 Nom du workflow GitHub Actions
-name: CI
+name: Automate Sub-Issues Management
 
-# 📌 Définition des déclencheurs du workflow
+# 📌 Définition des déclencheurs du workflow (événements qui le lancent)
 on:
-  # 🔹 Exécution automatique lorsqu'il y a un "push" ou une "pull request" sur la branche "main"
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  # 🔹 Déclenché lorsqu'une tâche parent est assignée, modifiée ou fermée
+  issues:
+    types: [assigned, edited, closed]
 
-  # 🔹 Permet d'exécuter le workflow manuellement depuis l'interface GitHub Actions
-  workflow_dispatch:
+  # 🔹 Déclenché lorsqu'une sub-issue reçoit un commentaire (signifiant qu'elle est en cours de traitement)
+  issue_comment:
+    types: [created]
 
 # 📌 Définition des jobs (tâches) du workflow
 jobs:
-  # 🔹 Nom du job : "build"
-  build:
-    # 🔹 Définition du type de machine virtuelle utilisée pour exécuter le job
-    runs-on: ubuntu-latest
+  # 🔹 Job 1 : Déplacer les sub-issues en "To Do" lorsqu'une tâche parent est assignée
+  move-sub-issues-to-todo:
+    runs-on: ubuntu-latest  # Exécution sur une machine virtuelle Linux
 
-    # 📌 Définition des étapes du job
+    # Vérifie si l'action est bien une assignation
+    if: github.event.action == 'assigned'
+
     steps:
-      # 🔹 Étape 1 : Cloner le dépôt GitHub sur la machine virtuelle
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4  # Récupère le code source du dépôt
 
-      # 🔹 Étape 2 : Exécuter un script simple qui affiche "Hello, world!"
-      - name: Run a one-line script
-        run: echo Hello, world!
+      # 🔹 Étape 2 : Récupérer les sub-issues et les déplacer en "To Do"
+      - name: Move sub-issues to "To Do"
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const issueBody = issue.body;
 
-      # 🔹 Étape 3 : Exécuter un script multi-ligne avec plusieurs commandes
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+            // Trouve toutes les sub-issues liées à l'issue parent (ex: #10, #11)
+            const subIssues = issueBody.match(/#(\d+)/g);
+
+            if (subIssues) {
+              for (const subIssue of subIssues) {
+                const issueNumber = subIssue.replace("#", "");
+
+                // Déplace chaque sub-issue vers la colonne "To Do"
+                await github.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issueNumber,
+                  state: "open",  # S'assure que l'issue est ouverte
+                  labels: ["To Do"]  # Ajoute le label "To Do" pour la colonne
+                });
+              }
+            }
+
+  # 🔹 Job 2 : Déplacer une sub-issue en "In Progress" lorsqu'elle est ouverte
+  move-sub-issue-to-in-progress:
+    runs-on: ubuntu-latest  # Exécution sur une machine virtuelle Linux
+
+    # Vérifie si un commentaire a été ajouté à l'issue (cela signifie qu'elle est en cours de traitement)
+    if: github.event_name == 'issue_comment'
+
+    steps:
+      - uses: actions/checkout@v4  # Récupère le code source du dépôt
+
+      # 🔹 Étape 2 : Mettre à jour l'état de la sub-issue en "In Progress"
+      - name: Move sub-issue to "In Progress"
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue = context.payload.issue;
+
+            // Ajoute le label "In Progress" à l'issue actuelle
+            await github.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              labels: ["In Progress"]
+            });
+
+  # 🔹 Job 3 : Vérifier si toutes les sub-issues sont fermées et fermer le parent
+  close-parent-when-sub-issues-done:
+    runs-on: ubuntu-latest  # Exécution sur une machine virtuelle Linux
+
+    # Vérifie si une issue est fermée
+    if: github.event.issue.state == 'closed'
+
+    steps:
+      - uses: actions/checkout@v4  # Récupère le code source du dépôt
+
+      # 🔹 Étape 2 : Vérifier que toutes les sub-issues sont fermées avant de fermer le parent
+      - name: Check if all sub-issues are done
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const issueBody = issue.body;
+
+            // Trouve toutes les sub-issues liées à cette issue parent
+            const subIssues = issueBody.match(/#(\d+)/g);
+
+            if (subIssues) {
+              let allClosed = true;  // Suppose que toutes les sub-issues sont fermées
+
+              for (const subIssue of subIssues) {
+                const issueNumber = subIssue.replace("#", "");
+
+                // Vérifie l'état de chaque sub-issue
+                const subIssueData = await github.issues.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issueNumber
+                });
+
+                if (subIssueData.data.state !== "closed") {
+                  allClosed = false;  # Si une sub-issue est encore ouverte, on arrête la fermeture
+                  break;
+                }
+              }
+
+              // Si toutes les sub-issues sont fermées, on ferme aussi l’issue parent
+              if (allClosed) {
+                await github.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: "closed",
+                  labels: ["Done"]  # Déplacement de l’issue parent en "Done"
+                });
+              }
+            }
