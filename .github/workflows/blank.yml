@@ -1,0 +1,35 @@
+# 📌 Nom du workflow GitHub Actions
+name: CI
+
+# 📌 Définition des déclencheurs du workflow
+on:
+  # 🔹 Exécution automatique lorsqu'il y a un "push" ou une "pull request" sur la branche "main"
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # 🔹 Permet d'exécuter le workflow manuellement depuis l'interface GitHub Actions
+  workflow_dispatch:
+
+# 📌 Définition des jobs (tâches) du workflow
+jobs:
+  # 🔹 Nom du job : "build"
+  build:
+    # 🔹 Définition du type de machine virtuelle utilisée pour exécuter le job
+    runs-on: ubuntu-latest
+
+    # 📌 Définition des étapes du job
+    steps:
+      # 🔹 Étape 1 : Cloner le dépôt GitHub sur la machine virtuelle
+      - uses: actions/checkout@v4
+
+      # 🔹 Étape 2 : Exécuter un script simple qui affiche "Hello, world!"
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # 🔹 Étape 3 : Exécuter un script multi-ligne avec plusieurs commandes
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
