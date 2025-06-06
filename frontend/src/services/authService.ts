@@ -4,40 +4,76 @@ interface LoginCredentials {
 }
 
 interface AuthResponse {
-  token: string;
-  user: {
+  success: boolean;
+  message?: string;
+  token?: string;
+  user?: {
     id: string;
     email: string;
-    userName: string;
-    role: string;
+    nom: string;
+    prenom: string;
   };
-  success: boolean;
-  message: string;
 }
 
+// Simuler une "base de données" temporaire
+let registeredUsers: any[] = [];
+
 export const authService = {
+  register: async (userData: any): Promise<AuthResponse> => {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Sauvegarder les données d'inscription dans le localStorage
+    const newUser = {
+      id: Date.now().toString(),
+      email: userData.email,
+      password: userData.password,
+      nom: userData.nom,
+      prenom: userData.prenom,
+      telephone: userData.telephone
+    };
+    
+    // Sauvegarder dans notre "base de données" temporaire
+    registeredUsers.push(newUser);
+    localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+    
+    return { success: true };
+  },
+
   login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
-    const response = await fetch('https://localhost:7241/api/Auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(credentials),
-    });
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
-    const data = await response.json();
+    // Récupérer les utilisateurs enregistrés
+    const savedUsers = localStorage.getItem('registeredUsers');
+    const users = savedUsers ? JSON.parse(savedUsers) : [];
+    
+    // Rechercher l'utilisateur
+    const user = users.find((u: any) => 
+      u.email === credentials.email && u.password === credentials.password
+    );
 
-    if (!response.ok) {
-      throw new Error(data.message || 'Erreur de connexion');
+    if (user) {
+      const token = 'mock-jwt-token-' + user.id;
+      const userWithoutPassword = {
+        id: user.id,
+        email: user.email,
+        nom: user.nom,
+        prenom: user.prenom
+      };
+      
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(userWithoutPassword));
+      
+      return {
+        success: true,
+        token,
+        user: userWithoutPassword
+      };
     }
 
-    if (data.token) {
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-    }
-
-    return data;
+    return {
+      success: false,
+      message: 'Email ou mot de passe incorrect'
+    };
   },
 
   logout: () => {
@@ -47,17 +83,6 @@ export const authService = {
   },
 
   isAuthenticated: () => {
-    const token = localStorage.getItem('token');
-    return !!token;
-  },
-
-  getAuthHeader: () => {
-    const token = localStorage.getItem('token');
-    return token ? { 'Authorization': `Bearer ${token}` } : {};
-  },
-
-  getCurrentUser: () => {
-    const userStr = localStorage.getItem('user');
-    return userStr ? JSON.parse(userStr) : null;
+    return !!localStorage.getItem('token');
   }
 };
