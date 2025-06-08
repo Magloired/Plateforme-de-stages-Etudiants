@@ -2,9 +2,11 @@ import { Roboto } from 'next/font/google'
 import './globals.css'
 
 const roboto = Roboto({
-  weight: ['400', '500', '700'],
   subsets: ['latin'],
+  weight: ['400', '500', '700'],
   display: 'swap',
+  preload: true,
+  fallback: ['system-ui', 'arial']
 })
 
 export const metadata = {

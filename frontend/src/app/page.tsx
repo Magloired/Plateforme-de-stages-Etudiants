@@ -1,5 +1,15 @@
 import Link from 'next/link';
-import { GraduationCap, Building2, Users, ArrowRight, Star, TrendingUp } from 'lucide-react';
+import {
+  GraduationCap,
+  Building2,
+  Users,
+  ArrowRight,
+  Star,
+  TrendingUp,
+} from 'lucide-react';
+
+// Correction ici : éviter d'appeler `new Date()` dans le JSX
+const currentYear = new Date().getFullYear();
 
 export default function Home() {
   return (
@@ -35,13 +45,13 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col items-center gap-6 mb-16">
-            <Link href="/login" passHref legacyBehavior>
-              <a className="group px-10 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold text-xl shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center gap-2">
-                Espace Étudiant
-                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </a>
+            <Link 
+              href="/login" 
+              className="group px-10 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold text-xl shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center gap-2"
+            >
+              Espace Étudiant
+              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
-
             <p className="text-gray-600">
               Vous êtes responsable ?
               <Link href="/admin/login" passHref legacyBehavior>
@@ -89,7 +99,7 @@ export default function Home() {
           <span className="text-lg font-bold text-gray-900">StagePro</span>
         </div>
         <p className="text-sm text-gray-500">
-          © {new Date().getFullYear()} Plateforme de Stages. Tous droits réservés.
+          © {currentYear} Plateforme de Stages. Tous droits réservés.
         </p>
       </footer>
     </div>
