@@ -398,7 +398,7 @@ export default function StagesPage() {
 
               {/* Contenu flexible */}
               <div className="p-6 flex-1 flex flex-col">
-                <div className="flex-1">
+                {/* <div className="flex-1">
                   <p className="text-gray-700 text-sm leading-relaxed mb-6 line-clamp-3">{stage.description}</p>
                   
                   <div className="space-y-4 mb-6">
@@ -427,7 +427,7 @@ export default function StagesPage() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 {/* Boutons d'action */}
                 <div className="flex gap-3">
