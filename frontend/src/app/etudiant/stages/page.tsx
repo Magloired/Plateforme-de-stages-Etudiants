@@ -289,7 +289,7 @@ export default function StagesPage() {
         </div>
 
         {/* Barre de recherche et filtres */}
-        <div className="bg-white rounded-2xl shadow-lg p-2 mb-4">
+        <div className=" p-8 mb-4">
           <div className="flex flex-col lg:flex-row items-center gap-4 mb-2">
             <div className="flex-1 w-full">
               <div className="relative">
