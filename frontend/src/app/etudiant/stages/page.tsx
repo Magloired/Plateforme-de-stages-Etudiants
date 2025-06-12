@@ -682,7 +682,7 @@ export default function StagesPage() {
     className="w-full border-2 border-gray-200 rounded-xl px-4 py-2 focus:outline-none"
     onChange={(e) => {
       if (e.target.files && e.target.files.length > 0) {
-        handleFormChange('cv', e.target.files[0]);
+        handleFormChange('motivation', e.target.files[0]);
       }
     }}
   />
