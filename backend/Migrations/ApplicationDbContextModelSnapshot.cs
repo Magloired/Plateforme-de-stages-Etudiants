@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using backend.Data;
 
 #nullable disable
 
@@ -21,7 +22,7 @@ namespace backend.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Candidature", b =>
+            modelBuilder.Entity("backend.Models.Candidature", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -46,7 +47,7 @@ namespace backend.Migrations
                     b.ToTable("Candidatures");
                 });
 
-            modelBuilder.Entity("Entreprise", b =>
+            modelBuilder.Entity("backend.Models.Entreprise", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -68,7 +69,7 @@ namespace backend.Migrations
                     b.ToTable("Entreprises");
                 });
 
-            modelBuilder.Entity("OffreDeStage", b =>
+            modelBuilder.Entity("backend.Models.OffreStage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -93,7 +94,7 @@ namespace backend.Migrations
                     b.ToTable("Offres");
                 });
 
-            modelBuilder.Entity("Role", b =>
+            modelBuilder.Entity("backend.Models.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -109,7 +110,7 @@ namespace backend.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("User", b =>
+            modelBuilder.Entity("backend.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -134,7 +135,7 @@ namespace backend.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Validation", b =>
+            modelBuilder.Entity("backend.Models.Validation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
