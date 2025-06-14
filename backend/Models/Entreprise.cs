@@ -1,7 +1,11 @@
-public class Entreprise
+
+namespace backend.Models
 {
-    public int Id { get; set; }
-    public string? Nom { get; set; }
-    public string? Adresse { get; set; }
-    public string? EmailContact { get; set; }
+    public class Entreprise
+    {
+        public int Id { get; set; }
+        public string? Nom { get; set; }
+        public string? Adresse { get; set; }
+        public string? EmailContact { get; set; }
+    }
 }

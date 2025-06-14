@@ -1,0 +1,23 @@
+services:
+  api:
+    build: .
+    ports:
+      - "5196:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Database=StagePlatformDB;Username=postgres;Password=Gl0ryg@m&rkhAn.*
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: stagesdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

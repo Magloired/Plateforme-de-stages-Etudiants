@@ -1,5 +1,8 @@
-public class Role
+namespace backend.Models
 {
-    public int Id { get; set; }
-    public string? Nom { get; set; } // Étudiant, Enseignant, Responsable, Admin
+    public class Role
+    {
+        public int Id { get; set; }
+        public string? Nom { get; set; } // Étudiant, Enseignant, Responsable, Admin
+    }
 }
