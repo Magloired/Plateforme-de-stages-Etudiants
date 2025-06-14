@@ -17,6 +17,9 @@ var config = builder.Configuration;
 // Ajout des services
 builder.Services.AddControllers();
 
+// Auto mapper
+builder.Services.AddAutoMapper(typeof(Program));
+
 // CORS - permet à tout frontend d’accéder à l’API (à adapter en prod)
 builder.Services.AddCors(options =>
 {
@@ -45,7 +48,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(config.GetConnectionString("DefaultConnection")));
 
 // Injection des dépendances
+//Services
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IOffreService, OffreService>();
+//Repositories
 builder.Services.AddScoped<IOffreRepository, OffreRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
@@ -93,5 +99,12 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 app.MapGet("/", () => "Bienvenue sur la plateforme de stages !");
+
+// Appliquer les migrations au démarrage
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.Migrate();
+}
 
 app.Run();

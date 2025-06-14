@@ -30,12 +30,15 @@ namespace backend.Services
         /// </summary>
         public async Task<string> RegisterAsync(RegisterDTO registerDto)
         {
+            // Valider les champs
             ValidateRegisterDto(registerDto);
 
+            // Vérifier si l'email existe déjà
             var emailExists = await _userRepo.EmailExistsAsync(registerDto.Email);
             if (emailExists)
                 throw new ArgumentException("Email already exists");
 
+            // Créer l'utilisateur
             var user = new User
             {
                 Nom = registerDto.Nom,
@@ -44,9 +47,10 @@ namespace backend.Services
                 Role = registerDto.Role
             };
 
+            // Ajouter l'utilisateur + s'assurer que SaveChangesAsync est appelé ici
             await _userRepo.AddAsync(user);
 
-            // Générer un token après l'enregistrement
+            // Générer les claims du token (après que user.Id soit défini)
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -54,9 +58,11 @@ namespace backend.Services
                 new Claim(ClaimTypes.Role, user.Role ?? "Etudiant")
             };
 
+            // Générer la clé et le token
             var jwtKey = _config["Jwt:Key"];
             if (string.IsNullOrEmpty(jwtKey))
                 throw new InvalidOperationException("JWT key is not configured.");
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -68,8 +74,10 @@ namespace backend.Services
                 signingCredentials: creds
             );
 
+            // Retourner le token
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
 
         /// <summary>
         /// Authenticates a user and returns a JWT token if credentials are valid.
@@ -131,8 +139,8 @@ namespace backend.Services
             if (string.IsNullOrWhiteSpace(password))
                 throw new ArgumentException("Password is required");
 
-            if (password.Length < 6 || password.Length > 12)
-                throw new ArgumentException("Password must be between 6 and 12 characters");
+            if (password.Length < 6 || password.Length > 30)
+                throw new ArgumentException("Password must be between 6 and 30 characters");
 
             if (password.Any(char.IsWhiteSpace))
                 throw new ArgumentException("Password cannot contain whitespace");
@@ -140,8 +148,9 @@ namespace backend.Services
             if (password.Any(char.IsControl))
                 throw new ArgumentException("Password cannot contain control characters");
 
-            if (password.Any(c => !char.IsLetterOrDigit(c) && c != '_' && c != '-'))
-                throw new ArgumentException("Password can only contain letters, digits, underscores, and hyphens");
+            var allowedSpecialChars = "!@#$%^&*()_+-=.:,;?";
+            if (password.Any(c => !char.IsLetterOrDigit(c) && !allowedSpecialChars.Contains(c)))
+                throw new ArgumentException("Password contains invalid characters");
 
             if (!password.Any(char.IsUpper) || !password.Any(char.IsLower))
                 throw new ArgumentException("Password must contain both uppercase and lowercase letters");
@@ -149,6 +158,7 @@ namespace backend.Services
             if (!password.Any(char.IsDigit))
                 throw new ArgumentException("Password must contain at least one digit");
         }
+
 
         public Task<bool> IsEmailRegisteredAsync(string email)
         {

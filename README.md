@@ -60,6 +60,19 @@ dotnet add package AutoMapper
 dotnet add package BCrypt.Net-Next
 dotnet add package System.IdentityModel.Tokens.Jwt
 
+# Migration
+dotnet ef migrations add InitialCreate
+
+# Sans docker
+dotnet ef database update
+
+#Avec docker
+docker-compose exec api dotnet ef database update
+
+# Version Update 
+dotnet tool update --global dotnet-ef
+
+
 ```
 | Package                                           | Utilité principale                                                |
 |---------------------------------------------------|-------------------------------------------------------------------|

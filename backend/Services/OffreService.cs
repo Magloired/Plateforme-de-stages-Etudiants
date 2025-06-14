@@ -7,7 +7,8 @@ using backend.DTO;
 using backend.Models;
 using backend.Repositories.Interfaces;
 using backend.Services.Interfaces;
-namespace Backend.Services
+
+namespace backend.Services
 {
     /// <summary>
     /// Service for managing Offre entities.

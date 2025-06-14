@@ -31,17 +31,24 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Register([FromBody] RegisterDTO dto)
     {
         if (dto == null)
-        {
             return BadRequest("Invalid registration data.");
-        }
 
-        var result = await _authService.RegisterAsync(dto);
-        if (result.Contains("success"))
+        try
         {
-            return Ok(new { message = "Registration successful", result });
+            var result = await _authService.RegisterAsync(dto);
+            return Ok(new { message = "Registration successful", token = result });
         }
-        return BadRequest("Registration failed.");
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            // Log l'erreur (à faire)
+            return StatusCode(500, "Internal server error: " + ex.Message);
+        }
     }
+
 
     /// <summary>
     /// Logs in a user with the provided credentials.
