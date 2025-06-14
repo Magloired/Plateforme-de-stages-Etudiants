@@ -7,5 +7,6 @@ namespace backend.Models
         public string? Nom { get; set; }
         public string? Adresse { get; set; }
         public string? EmailContact { get; set; }
+        public Specialite Specialite { get; set; }
     }
 }
