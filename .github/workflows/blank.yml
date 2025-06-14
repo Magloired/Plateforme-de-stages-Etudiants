@@ -3,58 +3,26 @@ name: Automate Sub-Issues Management
 
 # 📌 Définition des déclencheurs du workflow (événements qui le lancent)
 on:
-  # 🔹 Déclenché lorsqu'une tâche parent est assignée, modifiée ou fermée
+  # 🔹 Déclenché lorsqu’une issue est ouverte, modifiée ou labélisée
   issues:
-    types: [assigned, edited, closed]
+    types: [opened, edited, labeled, assigned, commented, milestoned, review_requested, synchronized, closed]
 
-  # 🔹 Déclenché lorsqu'une sub-issue reçoit un commentaire (signifiant qu'elle est en cours de traitement)
+  # 🔹 Déclenché lorsqu’un commentaire est ajouté à une sub-issue (indique une activité en cours)
   issue_comment:
     types: [created]
 
+  # 🔹 Déclenché lorsqu’une Pull Request est créée, fusionnée ou fermée
+  pull_request:
+    types: [opened, closed, merged]
+
 # 📌 Définition des jobs (tâches) du workflow
 jobs:
-  # 🔹 Job 1 : Déplacer les sub-issues en "To Do" lorsqu'une tâche parent est assignée
-  move-sub-issues-to-todo:
-    runs-on: ubuntu-latest  # Exécution sur une machine virtuelle Linux
-
-    # Vérifie si l'action est bien une assignation
-    if: github.event.action == 'assigned'
-
-    steps:
-      - uses: actions/checkout@v4  # Récupère le code source du dépôt
-
-      # 🔹 Étape 2 : Récupérer les sub-issues et les déplacer en "To Do"
-      - name: Move sub-issues to "To Do"
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const issue = context.payload.issue;
-            const issueBody = issue.body;
-
-            // Trouve toutes les sub-issues liées à l'issue parent (ex: #10, #11)
-            const subIssues = issueBody.match(/#(\d+)/g);
-
-            if (subIssues) {
-              for (const subIssue of subIssues) {
-                const issueNumber = subIssue.replace("#", "");
-
-                // Déplace chaque sub-issue vers la colonne "To Do"
-                await github.issues.update({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: issueNumber,
-                  state: "open",  # S'assure que l'issue est ouverte
-                  labels: ["To Do"]  # Ajoute le label "To Do" pour la colonne
-                });
-              }
-            }
-
-  # 🔹 Job 2 : Déplacer une sub-issue en "In Progress" lorsqu'elle est ouverte
+  # 🔹 Job 1 : Déplacer une sub-issue en "In Progress" et son issue parent si nécessaire
   move-sub-issue-to-in-progress:
     runs-on: ubuntu-latest  # Exécution sur une machine virtuelle Linux
 
-    # Vérifie si un commentaire a été ajouté à l'issue (cela signifie qu'elle est en cours de traitement)
-    if: github.event_name == 'issue_comment'
+    # Vérifie si l’action est liée à une sub-issue passant de "No Status" à "In Progress"
+    if: github.event.issue.labels.name == 'No Status' || github.event_name == 'issue_comment'
 
     steps:
       - uses: actions/checkout@v4  # Récupère le code source du dépôt
@@ -66,7 +34,7 @@ jobs:
           script: |
             const issue = context.payload.issue;
 
-            // Ajoute le label "In Progress" à l'issue actuelle
+            // Ajoute le label "In Progress" à l’issue actuelle
             await github.issues.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -74,7 +42,32 @@ jobs:
               labels: ["In Progress"]
             });
 
-  # 🔹 Job 3 : Vérifier si toutes les sub-issues sont fermées et fermer le parent
+            // 🔹 Récupérer l'issue parent liée à cette sub-issue
+            const issueBody = issue.body;
+            const parentIssueMatch = issueBody.match(/Parent Issue: #(\d+)/);
+            if (parentIssueMatch) {
+              const parentIssueNumber = parentIssueMatch[1];
+
+              // 🔹 Vérifie si l’issue parent est déjà en "In Progress"
+              const parentIssueData = await github.issues.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: parentIssueNumber
+              });
+
+              const parentLabels = parentIssueData.data.labels.map(label => label.name);
+              if (!parentLabels.includes("In Progress")) {
+                // 🔹 Ajoute "In Progress" à l’issue parent seulement si nécessaire
+                await github.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: parentIssueNumber,
+                  labels: ["In Progress"]
+                });
+              }
+            }
+
+  # 🔹 Job 2 : Vérifier si toutes les sub-issues sont fermées et fermer l’issue parent si nécessaire
   close-parent-when-sub-issues-done:
     runs-on: ubuntu-latest  # Exécution sur une machine virtuelle Linux
 
@@ -84,7 +77,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4  # Récupère le code source du dépôt
 
-      # 🔹 Étape 2 : Vérifier que toutes les sub-issues sont fermées avant de fermer le parent
+      # 🔹 Étape 2 : Vérifie que toutes les sub-issues sont bien fermées avant de fermer le parent
       - name: Check if all sub-issues are done
         uses: actions/github-script@v6
         with:
@@ -92,16 +85,15 @@ jobs:
             const issue = context.payload.issue;
             const issueBody = issue.body;
 
-            // Trouve toutes les sub-issues liées à cette issue parent
+            // 🔹 Trouve toutes les sub-issues liées à cette issue parent
             const subIssues = issueBody.match(/#(\d+)/g);
-
             if (subIssues) {
-              let allClosed = true;  // Suppose que toutes les sub-issues sont fermées
+              let allClosed = true;  # Suppose que toutes les sub-issues sont fermées
 
               for (const subIssue of subIssues) {
                 const issueNumber = subIssue.replace("#", "");
 
-                // Vérifie l'état de chaque sub-issue
+                // 🔹 Vérifie l’état de chaque sub-issue
                 const subIssueData = await github.issues.get({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
@@ -114,7 +106,7 @@ jobs:
                 }
               }
 
-              // Si toutes les sub-issues sont fermées, on ferme aussi l’issue parent
+              // 🔹 Si toutes les sub-issues sont fermées, on ferme aussi l’issue parent
               if (allClosed) {
                 await github.issues.update({
                   owner: context.repo.owner,
