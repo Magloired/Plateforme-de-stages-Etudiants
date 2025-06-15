@@ -39,7 +39,7 @@ namespace backend.Controllers
 
         // POST: api/Entreprise
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<EntrepriseReadDTO>> Create([FromBody] EntrepriseCreateDTO dto)
         {
             if (!ModelState.IsValid)

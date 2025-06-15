@@ -39,7 +39,7 @@ namespace backend.Controllers
 
         // POST: api/Candidature
         [HttpPost]
-        [Authorize(Roles = "Etudiant")]
+        //[Authorize(Roles = "Etudiant")]
         public async Task<ActionResult<CandidatureReadDTO>> Create([FromBody] CandidatureCreateDTO dto)
         {
             var created = await _candidatureService.AddCandidatureAsync(dto);
@@ -64,7 +64,7 @@ namespace backend.Controllers
 
         // DELETE: api/Candidature/5
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Etudiant")]
+        //[Authorize(Roles = "Etudiant")]
         public async Task<IActionResult> Delete(int id)
         {
             await _candidatureService.DeleteCandidatureAsync(id);

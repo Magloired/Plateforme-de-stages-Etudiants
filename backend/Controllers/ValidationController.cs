@@ -38,7 +38,7 @@ namespace backend.Controllers
 
         // POST: api/Validation
         [HttpPost]
-        [Authorize(Roles = "Enseignant,Responsable,Admin")]
+        //[Authorize(Roles = "Enseignant,Responsable,Admin")]
         public async Task<ActionResult<ValidationReadDTO>> Create([FromBody] ValidationCreateDTO dto)
         {
             var createdValidation = await _validationService.AddValidationAsync(dto);

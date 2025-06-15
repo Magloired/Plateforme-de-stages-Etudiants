@@ -53,7 +53,7 @@ namespace Backend.Controllers
         /// Adds a new Offre entity.
         /// </summary>
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddOffre([FromBody] OffreStageCreateDTO offreStageCreateDTO)
         {
             if (offreStageCreateDTO == null)
