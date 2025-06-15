@@ -1,0 +1,72 @@
+K. Robert Ages
+2:18 PM
+http://localhost:5196/api/entreprise
+[
+  {
+    "id": 1,
+    "nom": "Tech Innov",
+    "description": "Entreprise spécialisée dans le développement logiciel",
+    "siteWeb": "https://www.techinnov.com",
+    "adresse": "123 rue de l'Innovation",
+    "ville": "Lomé",
+    "pays": "Togo",
+    "telephone": "+22890112233",
+    "emailContact": "contact@techinnov.com",
+    "specialite": "Developpement",
+    "dateCreation": "2025-06-15T12:46:21.23494Z"
+  },
+  {
+    "id": 2,
+    "nom": "Agence Afrique Digitale",
+    "description": "Entreprise
+http://localhost:5196/api/offres
+[
+  {
+    "id": 1,
+    "titre": "Stage en développement web",
+    "description": "Participer au développement d’une application web avec ASP.NET et React.",
+    "datePublication": "0001-01-01T00:00:00",
+    "dureeMois": 3,
+    "lieu": "Lomé",
+    "typeStage": "Temps plein",
+    "remuneration": 150,
+    "dateLimiteCandidature": "2025-07-31T23:59:59Z",
+    "istActive": false,
+    "entrepriseId": 1,
+    "entrepriseNom": "Tech Innov"
+  },
+  {
+    "id": 2,
+    "titre": "Stage en Sécurité de Serveur c
+http://localhost:5196/api/candidature
+K. Robert Ages
+2:19 PM
+[
+  {
+    "id": 2,
+    "userId": 1,
+    "nomCandidat": "Ages",
+    "offreDeStageId": 2,
+    "titreOffre": "Stage en Sécurité de Serveur cloud",
+    "dateSoumission": "2025-06-15T13:09:22.841664Z",
+    "statut": "EnAttente",
+    "documentUrl": "https://example.com/documents/cv-robert.pdf"
+  }
+]
+http://localhost:5196/api/validation
+[
+  {
+    "id": 3,
+    "enseignantId": 1,
+    "nomEnseignant": "Ages",
+    "candidatureId": 2,
+    "nomCandidat": "Ages",
+    "decision": "Accepte",
+    "dateValidation": "2025-06-15T13:15:11.926201Z",
+    "commentaire": "Candidature validée avec succès."
+  }
+]
+
+K. Robert Ages
+2:52 PM
+https://ckeditor.com/ckeditor-5/
