@@ -1,6 +1,8 @@
-namespace Backend.DTO.EntrepriseDTO
+using backend.Models.Enums;
+
+namespace backend.DTO.EntrepriseDTO
 {
-    public class EntrepriseCreateDto
+    public class EntrepriseCreateDTO
     {
         public string Nom { get; set; } = null!;
         public string? Description { get; set; }

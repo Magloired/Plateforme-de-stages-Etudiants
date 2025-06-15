@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using backend.DTO.ValidationDTOs;
+using backend.DTO.ValidationDTO;
 using backend.Models;
 using backend.Repositories.Interfaces;
 using backend.Services.Interfaces;

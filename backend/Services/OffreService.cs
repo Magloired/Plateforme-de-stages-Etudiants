@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using backend.DTO;
+using backend.DTO.OffreStageDTO;
 using backend.Models;
 using backend.Repositories.Interfaces;
 using backend.Services.Interfaces;

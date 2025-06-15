@@ -9,16 +9,16 @@ namespace backend.Mapping
     {
         public ValidationMappingProfile()
         {
-            CreateMap<Validation, ValidationDTO>()
-                .ForMember(dest => dest.EnseignantNom, opt => opt.MapFrom(src => src.Enseignant.Nom))
-                .ForMember(dest => dest.CandidatNom, opt => opt.MapFrom(src => src.Candidature.User.Nom))
-                .ForMember(dest => dest.OffreTitre, opt => opt.MapFrom(src => src.Candidature.OffreDeStage.Titre));
+            CreateMap<Validation, ValidationReadDTO>()
+                .ForMember(dest => dest.NomEnseignant, opt => opt.MapFrom(src => src.Enseignant.Nom))
+                .ForMember(dest => dest.NomCandidat, opt => opt.MapFrom(src => src.Candidature.User.Nom));
+                //.ForMember(dest => dest.Titre, opt => opt.MapFrom(src => src.Candidature.OffreDeStage.Titre));
 
             CreateMap<ValidationCreateDTO, Validation>();
 
             CreateMap<ValidationUpdateDTO, Validation>();
 
-            CreateMap<ValidationDTO, Validation>();
+            CreateMap<ValidationReadDTO, Validation>();
         }
     }
 }

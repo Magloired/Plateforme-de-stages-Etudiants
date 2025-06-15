@@ -1,4 +1,4 @@
-namespace Backend.DTO.OffreStageDTO
+namespace backend.DTO.OffreStageDTO
 {
     public class OffreStageReadDTO
     {

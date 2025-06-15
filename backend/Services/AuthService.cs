@@ -1,7 +1,6 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using backend.DTO;
 using backend.Models;
 using backend.Repositories.Interfaces;
 using backend.Services.Interfaces;
@@ -11,6 +10,8 @@ using System.Text;
 using System.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
+using backend.DTO.UserDTO;
+using backend.Models.Enums;
 
 namespace backend.Services
 {
@@ -91,7 +92,7 @@ namespace backend.Services
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Nom ?? string.Empty),
-                new Claim(ClaimTypes.Role, user.Role ?? "Etudiant")
+                new Claim(ClaimTypes.Role, user.Role.ToString())
             };
 
             var jwtKey = _config["Jwt:Key"];
@@ -122,8 +123,9 @@ namespace backend.Services
             if (string.IsNullOrWhiteSpace(dto.Email) || dto.Email.Length > 100 || !IsValidEmail(dto.Email))
                 throw new ArgumentException("Invalid email format or length");
 
-            if (string.IsNullOrWhiteSpace(dto.Role) || (dto.Role != "Etudiant" && dto.Role != "Entreprise") || dto.Role.Length > 20)
-                throw new ArgumentException("Role must be 'Etudiant' or 'Entreprise'");
+            // Vérifie que le rôle est une valeur définie dans l'enum Role
+            if (!Enum.IsDefined(typeof(Role), dto.Role))
+                throw new ArgumentException("Invalid role value");
 
             ValidatePassword(dto.Password);
         }

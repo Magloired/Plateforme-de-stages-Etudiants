@@ -1,6 +1,8 @@
-namespace Backend.DTO.ValidationDTO
+using backend.Models.Enums;
+
+namespace backend.DTO.ValidationDTO
 {
-    public class ValidationCreateDto
+    public class ValidationCreateDTO
     {
         public int EnseignantId { get; set; }
         public int CandidatureId { get; set; }

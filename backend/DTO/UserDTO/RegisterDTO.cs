@@ -1,9 +1,13 @@
+
+
+using backend.Models.Enums;
+
+
 /**
  * RegisterDTO.cs
  * This file defines the data transfer object for user registration.
  * It contains properties for the user's name, email, password, and role.
  */
-
 namespace backend.DTO.UserDTO
 {
     public class RegisterDTO

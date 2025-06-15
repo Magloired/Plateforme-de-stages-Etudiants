@@ -1,6 +1,6 @@
 using AutoMapper;
 using backend.Models;
-using backend.DTO.EntrepriseDTO
+using backend.DTO.EntrepriseDTO;
 
 namespace backend.Mapping 
 {
@@ -8,8 +8,8 @@ namespace backend.Mapping
     {
         public EntrepriseMappingProfile()
         {
-            CreateMap<Entreprise, EntrepriseDTO>();
-            CreateMap<EntrepriseDTO, Entreprise>();
+            CreateMap<Entreprise, EntrepriseReadDTO>();
+            CreateMap<EntrepriseReadDTO, Entreprise>();
             
             CreateMap<EntrepriseCreateDTO, Entreprise>();
             CreateMap<EntrepriseUpdateDTO, Entreprise>();

@@ -51,9 +51,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IOffreService, OffreService>();
+builder.Services.AddScoped<IEntrepriseService, EntrepriseService>();
+builder.Services.AddScoped<ICandidatureService, CandidatureService>();
+builder.Services.AddScoped<IValidationService, ValidationService>();
 //Repositories
 builder.Services.AddScoped<IOffreRepository, OffreRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IEntrepriseRepository, EntrepriseRepository>();
+builder.Services.AddScoped<ICandidatureRepository, CandidatureRepository>();
+builder.Services.AddScoped<IValidationRepository, ValidationRepository>();
 
 // Authentification JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -95,16 +101,26 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Active HTTPS redirection si tu le souhaites (attention certificat)
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.MapControllers();
 app.MapGet("/", () => "Bienvenue sur la plateforme de stages !");
 
 // Appliquer les migrations au démarrage
-using (var scope = app.Services.CreateScope())
+/*using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     dbContext.Database.Migrate();
+}*/
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
 }
+
 
 app.Run();

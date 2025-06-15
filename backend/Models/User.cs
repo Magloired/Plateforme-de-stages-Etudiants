@@ -1,3 +1,5 @@
+using backend.Models.Enums;
+
 namespace backend.Models
 {
     public class User

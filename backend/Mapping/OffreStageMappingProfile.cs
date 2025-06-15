@@ -8,14 +8,14 @@ namespace backend.Mapping
     {
         public OffreStageMappingProfile()
         {
-            CreateMap<OffreStage, OffreStageDTO>()
+            CreateMap<OffreStage, OffreStageReadDTO>()
                 .ForMember(dest => dest.EntrepriseNom, opt => opt.MapFrom(src => src.Entreprise.Nom));
 
             CreateMap<OffreStageCreateDTO, OffreStage>();
 
             CreateMap<OffreStageUpdateDTO, OffreStage>();
 
-            CreateMap<OffreStageDTO, OffreStage>();
+            CreateMap<OffreStageReadDTO, OffreStage>();
         }
     }
 }

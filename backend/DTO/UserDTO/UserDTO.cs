@@ -1,4 +1,7 @@
-namespace Backend.DTOs.UserDTOs
+using System;
+using backend.Models.Enums;
+
+namespace backend.DTO.UserDTO
 {
     public class UserDTO
     {
@@ -14,5 +17,6 @@ namespace Backend.DTOs.UserDTOs
         public string? Filiere { get; set; }
         public string? NiveauEtude { get; set; }
         public string? Telephone { get; set; }
+        public Specialite Specialite { get; set; }
     }
 }

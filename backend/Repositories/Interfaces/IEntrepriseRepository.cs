@@ -1,4 +1,5 @@
 using backend.Models;
+using backend.Models.Enums;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

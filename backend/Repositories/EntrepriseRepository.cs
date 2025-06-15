@@ -1,5 +1,6 @@
 using backend.Data;
 using backend.Models;
+using backend.Models.Enums;
 using backend.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -60,8 +61,8 @@ namespace backend.Repositories
             if (!string.IsNullOrEmpty(ville))
                 query = query.Where(e => e.Ville!.Contains(ville));
 
-            if (specialite != null)
-                query = query.Where(e => e.Specialite == specialite);
+            if (specialite.HasValue)
+                query = query.Where(e => e.Specialite == specialite.Value);
 
             return await query.ToListAsync();
         }

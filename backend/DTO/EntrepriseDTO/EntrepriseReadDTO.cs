@@ -1,4 +1,6 @@
-namespace Backend.DTO.EntrepriseDTO
+using backend.Models.Enums;
+
+namespace backend.DTO.EntrepriseDTO
 {
     public class EntrepriseReadDTO
     {

@@ -1,4 +1,6 @@
-namespace Backend.DTO.ValidationDTO
+using backend.Models.Enums;
+
+namespace backend.DTO.ValidationDTO
 {
     public class ValidationReadDTO
     {

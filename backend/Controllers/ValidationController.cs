@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using backend.DTO.ValidationDTOs;
+using backend.DTO.ValidationDTO;
 using backend.Services.Interfaces;
 
 namespace backend.Controllers

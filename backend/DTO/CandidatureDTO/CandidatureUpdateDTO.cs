@@ -1,6 +1,8 @@
-namespace Backend.DTO.CandidatureDTO
+using backend.Models.Enums;
+
+namespace backend.DTO.CandidatureDTO
 {
-    public class CandidatureUpdateDto
+    public class CandidatureUpdateDTO
     {
         public StatutCandidature Statut { get; set; }
 

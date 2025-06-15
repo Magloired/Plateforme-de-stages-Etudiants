@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using backend.DTO.EntrepriseDTOs;
+using backend.DTO.EntrepriseDTO;
 using backend.Models;
 using backend.Repositories.Interfaces;
 using backend.Services.Interfaces;

@@ -1,6 +1,6 @@
-namespace Backend.DTO.CandidatureDTO
+namespace backend.DTO.CandidatureDTO
 {
-    public class CandidatureCreateDto
+    public class CandidatureCreateDTO
     {
         public int UserId { get; set; }
         public int OffreDeStageId { get; set; }

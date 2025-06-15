@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using backend.DTO.CandidatureDTO;
+using backend.Models;
 
 namespace backend.Services.Interfaces
 {

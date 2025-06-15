@@ -6,11 +6,11 @@ namespace backend.Repositories.Interfaces
 {
     public interface ICandidatureRepository
     {
-        Task<IEnumerable<Candidature>> GetAllAsync();
-        Task<Candidature?> GetByIdAsync(int id);
-        Task AddAsync(Candidature candidature);
-        Task UpdateAsync(Candidature candidature);
-        Task DeleteAsync(int id);
+        Task<IEnumerable<Candidature>> GetAllCandidaturesAsync();
+        Task<Candidature?> GetCandidatureByIdAsync(int id);
+        Task AddCandidatureAsync(Candidature candidature);
+        Task UpdateCandidatureAsync(Candidature candidature);
+        Task DeleteCandidatureAsync(int id);
 
         // Rechercher toutes les candidatures d'un utilisateur
         Task<IEnumerable<Candidature>> GetByUserIdAsync(int userId);

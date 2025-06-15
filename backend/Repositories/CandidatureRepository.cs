@@ -14,7 +14,7 @@ namespace backend.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Candidature>> GetAllAsync()
+        public async Task<IEnumerable<Candidature>> GetAllCandidaturesAsync()
         {
             return await _context.Candidatures
                 .Include(c => c.User)
@@ -22,7 +22,7 @@ namespace backend.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Candidature?> GetByIdAsync(int id)
+        public async Task<Candidature?> GetCandidatureByIdAsync(int id)
         {
             return await _context.Candidatures
                 .Include(c => c.User)
@@ -30,21 +30,21 @@ namespace backend.Repositories
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task AddAsync(Candidature candidature)
+        public async Task AddCandidatureAsync(Candidature candidature)
         {
             _context.Candidatures.Add(candidature);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(Candidature candidature)
+        public async Task UpdateCandidatureAsync(Candidature candidature)
         {
             _context.Entry(candidature).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteCandidatureAsync(int id)
         {
-            var candidature = await GetByIdAsync(id);
+            var candidature = await GetCandidatureByIdAsync(id);
             if (candidature != null)
             {
                 _context.Candidatures.Remove(candidature);
