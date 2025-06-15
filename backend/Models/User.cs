@@ -1,8 +1,12 @@
-public class User
+namespace backend.Models
 {
-    public int Id { get; set; }
-    public string? Nom { get; set; }
-    public string? Email { get; set; }
-    public string? PasswordHash { get; set; }
-    public string? Role { get; set; } // Étudiant, Enseignant, Responsable, Admin
+    public class User
+    {
+        public int Id { get; set; }
+        public string? Nom { get; set; }
+        public string? Email { get; set; }
+        public string? PasswordHash { get; set; }
+        //public string? Role { get; set; } // Étudiant, Enseignant, Responsable, Admin
+        public Role Role { get; set; }
+    }
 }
