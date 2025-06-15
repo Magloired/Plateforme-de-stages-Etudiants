@@ -1,7 +1,7 @@
 
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using backend.DTO;
+using backend.DTO.UserDTO;
 using backend.Models;
 using backend.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;

@@ -1,8 +1,10 @@
 
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using backend.DTO;
+using backend.DTO.OffreStageDTO;
 using backend.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+
 namespace Backend.Controllers
 {
     /// <summary>
@@ -51,24 +53,26 @@ namespace Backend.Controllers
         /// Adds a new Offre entity.
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> AddOffre([FromBody] OffreStageDTO offreStageDTO)
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AddOffre([FromBody] OffreStageCreateDTO offreStageCreateDTO)
         {
-            if (offreStageDTO == null)
+            if (offreStageCreateDTO == null)
             {
                 return BadRequest("Offre data is null.");
             }
 
-            await _offreService.AddOffreAsync(offreStageDTO);
-            return CreatedAtAction(nameof(GetOffreById), new { id = offreStageDTO.Id }, offreStageDTO);
+            var createdOffre = await _offreService.AddOffreAsync(offreStageCreateDTO);
+            return CreatedAtAction(nameof(GetOffreById), new { id = createdOffre.Id }, createdOffre);
         }
 
         /// <summary>
         /// Updates an existing Offre entity.
         /// </summary>
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOffre(int id, [FromBody] OffreStageDTO offreStageDTO)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateOffre(int id, [FromBody] OffreStageUpdateDTO offreStageUpdateDTO)
         {
-            if (offreStageDTO == null || offreStageDTO.Id != id)
+            if (offreStageUpdateDTO == null)
             {
                 return BadRequest("Offre data is invalid.");
             }
@@ -79,7 +83,7 @@ namespace Backend.Controllers
                 return NotFound();
             }
 
-            await _offreService.UpdateOffreAsync(offreStageDTO);
+            await _offreService.UpdateOffreAsync(id, offreStageUpdateDTO);
             return NoContent();
         }
 
@@ -87,6 +91,7 @@ namespace Backend.Controllers
         /// Deletes an Offre entity by its ID.
         /// </summary>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteOffre(int id)
         {
             var existingOffre = await _offreService.GetOffreByIdAsync(id);
