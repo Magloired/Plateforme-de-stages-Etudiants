@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using backend.DTO;
 using backend.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+
 namespace Backend.Controllers
 {
     /// <summary>
@@ -51,6 +53,7 @@ namespace Backend.Controllers
         /// Adds a new Offre entity.
         /// </summary>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddOffre([FromBody] OffreStageDTO offreStageDTO)
         {
             if (offreStageDTO == null)
@@ -66,6 +69,7 @@ namespace Backend.Controllers
         /// Updates an existing Offre entity.
         /// </summary>
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateOffre(int id, [FromBody] OffreStageDTO offreStageDTO)
         {
             if (offreStageDTO == null || offreStageDTO.Id != id)
@@ -87,6 +91,7 @@ namespace Backend.Controllers
         /// Deletes an Offre entity by its ID.
         /// </summary>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteOffre(int id)
         {
             var existingOffre = await _offreService.GetOffreByIdAsync(id);
