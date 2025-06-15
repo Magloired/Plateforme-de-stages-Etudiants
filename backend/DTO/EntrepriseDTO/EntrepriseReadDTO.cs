@@ -1,6 +1,6 @@
 namespace Backend.DTO.EntrepriseDTO
 {
-    public class EntrepriseDto
+    public class EntrepriseReadDTO
     {
         public int Id { get; set; }
 

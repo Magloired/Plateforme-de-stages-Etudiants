@@ -1,6 +1,6 @@
 namespace Backend.DTO.ValidationDTO
 {
-    public class ValidationDto
+    public class ValidationReadDTO
     {
         public int Id { get; set; }
 

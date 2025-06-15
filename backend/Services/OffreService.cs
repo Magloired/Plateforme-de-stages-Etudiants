@@ -16,58 +16,43 @@ namespace backend.Services
     public class OffreService : IOffreService
     {
         private readonly IOffreRepository _offreRepository;
-        //private readonly ICandidatureRepository _candidatureRepository;
         private readonly IMapper _mapper;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OffreService"/> class.
-        /// </summary>
-        /// <param name="offreRepository">The repository for Offre entities.</param>
-        /// <param name="mapper">The mapper for converting between entities and DTOs.</param>
         public OffreService(IOffreRepository offreRepository, IMapper mapper)
         {
             _offreRepository = offreRepository;
             _mapper = mapper;
         }
 
-        /// <summary>
-        /// Gets all Offre entities.
-        /// </summary>
-        /// <returns>A collection of Offre DTOs.</returns>
-        public async Task<IEnumerable<OffreStageDTO>> GetAllOffresAsync()
+        public async Task<IEnumerable<OffreStageReadDTO>> GetAllOffresAsync()
         {
             var offres = await _offreRepository.GetAllOffresAsync();
-            return _mapper.Map<IEnumerable<OffreStageDTO>>(offres);
+            return _mapper.Map<IEnumerable<OffreStageReadDTO>>(offres);
         }
 
-        /// <summary>
-        /// Gets an Offre entity by its ID.
-        /// </summary>
-        /// <param name="id">The ID of the Offre.</param>
-        public async Task<OffreStageDTO> GetOffreByIdAsync(int id)
+        public async Task<OffreStageReadDTO> GetOffreByIdAsync(int id)
         {
             var offre = await _offreRepository.GetOffreByIdAsync(id);
-            return _mapper.Map<OffreStageDTO>(offre);
+            return _mapper.Map<OffreStageReadDTO>(offre);
         }
 
-        /// <summary>
-        /// Adds a new Offre entity.
-        /// </summary>
-        /// <param name="offreStageDTO">The Offre DTO to add.</param>
-        public async Task AddOffreAsync(OffreStageDTO offreStageDTO)
+        public async Task<OffreStageReadDTO> AddOffreAsync(OffreStageCreateDTO dto)
         {
-            var offre = _mapper.Map<OffreStage>(offreStageDTO);
+            var offre = _mapper.Map<OffreStage>(dto);
             await _offreRepository.AddOffreAsync(offre);
+            // Ici, offre.Id est rempli après ajout en base (selon implémentation)
+            return _mapper.Map<OffreStageReadDTO>(offre);
         }
 
-        /// <summary>
-        /// Updates an existing Offre entity.
-        /// </summary>
-        /// <param name="offreStageDTO">The Offre DTO to update.</param>
-        public async Task UpdateOffreAsync(OffreStageDTO offreStageDTO)
+        public async Task UpdateOffreAsync(int id, OffreStageUpdateDTO dto)
         {
-            var offre = _mapper.Map<OffreStage>(offreStageDTO);
-            await _offreRepository.UpdateOffreAsync(offre);
+            var offreExistante = await _offreRepository.GetOffreByIdAsync(id);
+            if (offreExistante == null) throw new KeyNotFoundException("Offre non trouvée");
+
+            // Mapper les propriétés modifiables du DTO vers l'entité existante
+            _mapper.Map(dto, offreExistante);
+
+            await _offreRepository.UpdateOffreAsync(offreExistante);
         }
 
         public async Task DeleteOffreAsync(int id)

@@ -1,6 +1,6 @@
 namespace Backend.DTO.OffreStageDTO
 {
-    public class OffreStageDto
+    public class OffreStageReadDTO
     {
         public int Id { get; set; }
         public string Titre { get; set; } = null!;

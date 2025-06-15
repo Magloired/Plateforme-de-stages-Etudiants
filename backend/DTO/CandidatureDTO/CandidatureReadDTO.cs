@@ -1,6 +1,6 @@
 namespace Backend.DTO.CandidatureDTO
 {
-    public class CandidatureDto
+    public class CandidatureReadDTO
     {
         public int Id { get; set; }
 
