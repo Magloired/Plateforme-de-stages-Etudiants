@@ -106,7 +106,7 @@ namespace backend.Repositories
         /// <returns>A collection of users with the specified role.</returns>
         public async Task<IEnumerable<User>> GetUsersByRoleAsync(string role)
         {
-            return await _context.Users.Where(u => u.Role == role).ToListAsync();
+            return await _context.Users.Where(u => u.Role.ToString() == role).ToListAsync();
         }
 
     }

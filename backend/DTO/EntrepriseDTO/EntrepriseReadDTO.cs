@@ -1,9 +1,8 @@
-
 using backend.Models.Enums;
 
-namespace backend.Models
+namespace backend.DTO.EntrepriseDTO
 {
-    public class Entreprise
+    public class EntrepriseReadDTO
     {
         public int Id { get; set; }
 
@@ -15,12 +14,11 @@ namespace backend.Models
         public string? Ville { get; set; }
         public string? Pays { get; set; }
         public string? Telephone { get; set; }
+
         public string EmailContact { get; set; } = null!;
 
         public Specialite Specialite { get; set; }
 
-        public ICollection<OffreStage> OffresStages { get; set; } = new List<OffreStage>();
-
-        public DateTime DateCreation { get; set; } = DateTime.UtcNow;
+        public DateTime DateCreation { get; set; }
     }
 }

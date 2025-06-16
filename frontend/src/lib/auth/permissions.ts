@@ -53,14 +53,6 @@ export const rolePermissions: Record<
   Role,
   Record<Resource, Action[]>
 > = {
-  SUPER_ADMIN: {
-    OFFRE: ["CREATE", "READ", "UPDATE", "DELETE", "MANAGE"],
-    ENTREPRISE: ["CREATE", "READ", "UPDATE", "DELETE", "MANAGE"],
-    CANDIDATURE: ["READ", "MANAGE"],
-    VALIDATION: ["READ", "MANAGE"],
-    USER: ["CREATE", "READ", "UPDATE", "DELETE", "MANAGE"],
-    SETTINGS: ["READ", "UPDATE"],
-  },
   ADMIN: {
     OFFRE: ["CREATE", "READ", "UPDATE", "DELETE"],
     ENTREPRISE: ["CREATE", "READ", "UPDATE", "DELETE"],

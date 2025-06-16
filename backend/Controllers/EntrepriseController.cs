@@ -1,106 +1,84 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
-using backend;  
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using backend.DTO.EntrepriseDTO;
+using backend.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers
 {
-  
-[Route("api/[controller]")]
     [ApiController]
-    public class EntreprisesController : ControllerBase
+    [Route("api/[controller]")]
+    public class EntrepriseController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IEntrepriseService _entrepriseService;
 
-        public EntreprisesController(ApplicationDbContext context)
+        public EntrepriseController(IEntrepriseService entrepriseService)
         {
-            _context = context;
+            _entrepriseService = entrepriseService;
         }
 
-        // GET: api/Entreprises
+        // GET: api/Entreprise
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Entreprise>>> GetEntreprises()
+        public async Task<ActionResult<IEnumerable<EntrepriseReadDTO>>> GetAll()
         {
-            return await _context.Entreprises.Include(e => e.OffresDeStage).ToListAsync();
+            var entreprises = await _entrepriseService.GetAllEntreprisesAsync();
+            return Ok(entreprises);
         }
 
-        // GET: api/Entreprises/5
+        // GET: api/Entreprise/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Entreprise>> GetEntreprise(int id)
+        public async Task<ActionResult<EntrepriseReadDTO>> GetById(int id)
         {
-            var entreprise = await _context.Entreprises
-                .Include(e => e.OffresDeStage)
-                .FirstOrDefaultAsync(e => e.Id == id);
-
+            var entreprise = await _entrepriseService.GetEntrepriseByIdAsync(id);
             if (entreprise == null)
-            {
-                return NotFound();
-            }
+                return NotFound($"Entreprise avec id {id} non trouvée.");
 
-            return entreprise;
+            return Ok(entreprise);
         }
 
-        // POST: api/Entreprises
+        // POST: api/Entreprise
         [HttpPost]
-        public async Task<ActionResult<Entreprise>> PostEntreprise(Entreprise entreprise)
+        //[Authorize(Roles = "Admin")]
+        public async Task<ActionResult<EntrepriseReadDTO>> Create([FromBody] EntrepriseCreateDTO dto)
         {
-            _context.Entreprises.Add(entreprise);
-            await _context.SaveChangesAsync();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            return CreatedAtAction(nameof(GetEntreprise), new { id = entreprise.Id }, entreprise);
+            var createdEntreprise = await _entrepriseService.AddEntrepriseAsync(dto);
+
+            // Retourner le nouvel objet créé avec URI
+            return CreatedAtAction(nameof(GetById), new { id = createdEntreprise.Id }, createdEntreprise);
         }
 
-        // PUT: api/Entreprises/5
+        // PUT: api/Entreprise/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEntreprise(int id, Entreprise entreprise)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Update(int id, [FromBody] EntrepriseUpdateDTO dto)
         {
-            if (id != entreprise.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(entreprise).State = EntityState.Modified;
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _entrepriseService.UpdateEntrepriseAsync(id, dto);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (KeyNotFoundException)
             {
-                if (!EntrepriseExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound($"Entreprise avec id {id} non trouvée.");
             }
 
             return NoContent();
         }
 
-        // DELETE: api/Entreprises/5
+        // DELETE: api/Entreprise/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEntreprise(int id)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
         {
-            var entreprise = await _context.Entreprises.FindAsync(id);
-            if (entreprise == null)
-            {
-                return NotFound();
-            }
-
-            _context.Entreprises.Remove(entreprise);
-            await _context.SaveChangesAsync();
-
+            // Tu peux ici vérifier si l'objet existe avant suppression si tu veux, sinon suppression directe
+            await _entrepriseService.DeleteEntrepriseAsync(id);
             return NoContent();
-        }
-
-        private bool EntrepriseExists(int id)
-        {
-            return _context.Entreprises.Any(e => e.Id == id);
         }
     }
-
 }
-
