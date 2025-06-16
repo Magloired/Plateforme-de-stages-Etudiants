@@ -100,24 +100,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-// Injection des services métiers
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IOffreService, OffreService>();
-builder.Services.AddScoped<IEntrepriseService, EntrepriseService>();
-builder.Services.AddScoped<ICandidatureService, CandidatureService>();
-builder.Services.AddScoped<IValidationService, ValidationService>();
-
-// Injection des repositories
-builder.Services.AddScoped<IOffreRepository, OffreRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IEntrepriseRepository, EntrepriseRepository>();
-builder.Services.AddScoped<ICandidatureRepository, CandidatureRepository>();
-builder.Services.AddScoped<IValidationRepository, ValidationRepository>();
-
-// ------------------------------------
-// CONSTRUCTION DE L'APPLICATION
-// ------------------------------------
-
 var app = builder.Build();
 
 // Middleware de développement
@@ -152,12 +134,11 @@ app.MapControllers();
 // Route simple d’accueil
 app.MapGet("/", () => "Bienvenue sur la plateforme de stages !");
 
-// Applique les migrations automatiques (optionnel mais pratique en dev)
+// Appliquer les migrations au démarrage
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate(); // Applique automatiquement les migrations en attente
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.Migrate();
 }
 
-// Lancement de l'application
 app.Run();

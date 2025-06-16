@@ -89,7 +89,7 @@ export default function LoginPage() {
     try {
       const response = await authService.login({
         ...formData,
-        rememberMe
+        // rememberMe
         
       });
       
