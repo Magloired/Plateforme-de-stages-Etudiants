@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using backend.Models;
-using backend.Models.Enums;
 
 namespace backend.Data
 {
@@ -13,6 +12,6 @@ namespace backend.Data
         public DbSet<Candidature> Candidatures { get; set; }
         public DbSet<Validation> Validations { get; set; }
         public DbSet<Entreprise> Entreprises { get; set; }
-        // Removed DbSet<Role> because Role is not a reference type (likely an enum)
+        public DbSet<Role> Roles { get; set; }
     }
 }
