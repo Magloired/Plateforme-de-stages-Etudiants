@@ -30,8 +30,8 @@ namespace backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                b.Property<DateTime>("DateSoumission")
-                    .HasColumnType("timestamp with time zone");
+                    b.Property<DateTime>("DateSoumission")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("DocumentUrl")
                         .HasColumnType("text");
@@ -42,8 +42,8 @@ namespace backend.Migrations
                     b.Property<int>("Statut")
                         .HasColumnType("integer");
 
-                b.Property<int>("UserId")
-                    .HasColumnType("integer");
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -51,8 +51,8 @@ namespace backend.Migrations
 
                     b.HasIndex("UserId");
 
-                b.ToTable("Candidatures");
-            });
+                    b.ToTable("Candidatures");
+                });
 
             modelBuilder.Entity("backend.Models.Entreprise", b =>
                 {
@@ -62,8 +62,8 @@ namespace backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                b.Property<string>("Adresse")
-                    .HasColumnType("text");
+                    b.Property<string>("Adresse")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("DateCreation")
                         .HasColumnType("timestamp with time zone");
@@ -94,10 +94,10 @@ namespace backend.Migrations
                     b.Property<string>("Ville")
                         .HasColumnType("text");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.ToTable("Entreprises");
-            });
+                    b.ToTable("Entreprises");
+                });
 
             modelBuilder.Entity("backend.Models.OffreStage", b =>
                 {
@@ -113,8 +113,8 @@ namespace backend.Migrations
                     b.Property<DateTime>("DatePublication")
                         .HasColumnType("timestamp with time zone");
 
-                b.Property<string>("Description")
-                    .HasColumnType("text");
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
 
                     b.Property<int>("DureeMois")
                         .HasColumnType("integer");
@@ -142,10 +142,8 @@ namespace backend.Migrations
 
                     b.HasIndex("EntrepriseId");
 
-                b.HasIndex("EntrepriseId");
-
-                b.ToTable("OffresDeStage");
-            });
+                    b.ToTable("Offres");
+                });
 
             modelBuilder.Entity("backend.Models.User", b =>
                 {
@@ -158,8 +156,8 @@ namespace backend.Migrations
                     b.Property<DateTime>("DateInscription")
                         .HasColumnType("timestamp with time zone");
 
-                b.Property<string>("Email")
-                    .HasColumnType("text");
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
 
                     b.Property<string>("Filiere")
                         .HasColumnType("text");
@@ -173,8 +171,8 @@ namespace backend.Migrations
                     b.Property<string>("Nom")
                         .HasColumnType("text");
 
-                b.Property<string>("PasswordHash")
-                    .HasColumnType("text");
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
 
                     b.Property<string>("Prenom")
                         .HasColumnType("text");
@@ -185,10 +183,10 @@ namespace backend.Migrations
                     b.Property<string>("Telephone")
                         .HasColumnType("text");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.ToTable("Users");
-            });
+                    b.ToTable("Users");
+                });
 
             modelBuilder.Entity("backend.Models.Validation", b =>
                 {
@@ -198,8 +196,8 @@ namespace backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                b.Property<int>("CandidatureId")
-                    .HasColumnType("integer");
+                    b.Property<int>("CandidatureId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Commentaire")
                         .HasColumnType("text");
@@ -210,8 +208,8 @@ namespace backend.Migrations
                     b.Property<int>("Decision")
                         .HasColumnType("integer");
 
-                b.Property<int>("EnseignantId")
-                    .HasColumnType("integer");
+                    b.Property<int>("EnseignantId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
