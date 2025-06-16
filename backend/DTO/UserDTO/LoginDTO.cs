@@ -4,7 +4,7 @@
  * This file defines the LoginDTO class used for user login data transfer.
  * It contains properties for email and password.
 */
-namespace backend.DTO
+namespace backend.DTO.UserDTO
 {
     public class LoginDTO
     {
