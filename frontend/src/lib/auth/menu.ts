@@ -96,7 +96,7 @@ export function getMenuList(role: Role): Group[] {
     });
   }
 
-  if ((role === "TEACHER" || role === "ADMIN" || role === "SUPER_ADMIN") && can("VALIDATION", "READ")) {
+  if ((role === "TEACHER" || role === "ADMIN" ) && can("VALIDATION", "READ")) {
     contentsMenus.push({
       href: "/dashboard/validations",
       label: "Validations",
