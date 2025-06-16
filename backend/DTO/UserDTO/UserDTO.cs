@@ -9,7 +9,8 @@ namespace backend.DTO.UserDTO
         public string? Nom { get; set; }
         public string? Prenom { get; set; }
         public string Email { get; set; } = null!;
-        public Role Role { get; set; }
+        //public Role Role { get; set; }
+        public string Role { get; set; } = string.Empty;
         public bool IsActif { get; set; }
         public DateTime DateInscription { get; set; }
 
