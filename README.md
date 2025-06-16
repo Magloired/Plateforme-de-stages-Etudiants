@@ -72,6 +72,8 @@ docker-compose exec api dotnet ef database update
 # Version Update 
 dotnet tool update --global dotnet-ef
 
+# Supprimer la config précédente de DB
+dotnet ef migrations add UpdateModel
 
 ```
 | Package                                           | Utilité principale                                                |
