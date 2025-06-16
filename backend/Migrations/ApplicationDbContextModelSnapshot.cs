@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using backend.Data;
 
 #nullable disable
 
@@ -21,188 +22,269 @@ namespace backend.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Candidature", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("integer");
-                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+            modelBuilder.Entity("backend.Models.Candidature", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                 b.Property<DateTime>("DateSoumission")
                     .HasColumnType("timestamp with time zone");
 
-                b.Property<int>("OffreDeStageId")
-                    .HasColumnType("integer");
+                    b.Property<string>("DocumentUrl")
+                        .HasColumnType("text");
 
-                b.Property<string>("Statut")
-                    .HasColumnType("text");
+                    b.Property<int>("OffreDeStageId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Statut")
+                        .HasColumnType("integer");
 
                 b.Property<int>("UserId")
                     .HasColumnType("integer");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.HasIndex("OffreDeStageId");
+                    b.HasIndex("OffreDeStageId");
 
-                b.HasIndex("UserId");
+                    b.HasIndex("UserId");
 
                 b.ToTable("Candidatures");
             });
 
-            modelBuilder.Entity("Entreprise", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("integer");
-                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+            modelBuilder.Entity("backend.Models.Entreprise", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                 b.Property<string>("Adresse")
                     .HasColumnType("text");
 
-                b.Property<string>("EmailContact")
-                    .HasColumnType("text");
+                    b.Property<DateTime>("DateCreation")
+                        .HasColumnType("timestamp with time zone");
 
-                b.Property<string>("Nom")
-                    .HasColumnType("text");
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("EmailContact")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Pays")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SiteWeb")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Specialite")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Telephone")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Ville")
+                        .HasColumnType("text");
 
                 b.HasKey("Id");
 
                 b.ToTable("Entreprises");
             });
 
-            modelBuilder.Entity("OffreDeStage", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("integer");
-                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+            modelBuilder.Entity("backend.Models.OffreStage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
 
-                b.Property<DateTime>("DatePublication")
-                    .HasColumnType("timestamp with time zone");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("DateLimiteCandidature")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DatePublication")
+                        .HasColumnType("timestamp with time zone");
 
                 b.Property<string>("Description")
                     .HasColumnType("text");
 
-                b.Property<int>("EntrepriseId")
-                    .HasColumnType("integer");
+                    b.Property<int>("DureeMois")
+                        .HasColumnType("integer");
 
-                b.Property<string>("Titre")
-                    .HasColumnType("text");
+                    b.Property<int>("EntrepriseId")
+                        .HasColumnType("integer");
 
-                b.HasKey("Id");
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Lieu")
+                        .HasColumnType("text");
+
+                    b.Property<decimal?>("Remuneration")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Titre")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TypeStage")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EntrepriseId");
 
                 b.HasIndex("EntrepriseId");
 
                 b.ToTable("OffresDeStage");
             });
 
-            modelBuilder.Entity("Role", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("integer");
-                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+            modelBuilder.Entity("backend.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
 
-                b.Property<string>("Nom")
-                    .HasColumnType("text");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                b.HasKey("Id");
-
-                b.ToTable("Roles");
-            });
-
-            modelBuilder.Entity("User", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("integer");
-                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<DateTime>("DateInscription")
+                        .HasColumnType("timestamp with time zone");
 
                 b.Property<string>("Email")
                     .HasColumnType("text");
 
-                b.Property<string>("Nom")
-                    .HasColumnType("text");
+                    b.Property<string>("Filiere")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActif")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("NiveauEtude")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Nom")
+                        .HasColumnType("text");
 
                 b.Property<string>("PasswordHash")
                     .HasColumnType("text");
 
-                b.Property<string>("Role")
-                    .HasColumnType("text");
+                    b.Property<string>("Prenom")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Telephone")
+                        .HasColumnType("text");
 
                 b.HasKey("Id");
 
                 b.ToTable("Users");
             });
 
-            modelBuilder.Entity("Validation", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("integer");
-                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+            modelBuilder.Entity("backend.Models.Validation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                 b.Property<int>("CandidatureId")
                     .HasColumnType("integer");
 
-                b.Property<DateTime>("DateValidation")
-                    .HasColumnType("timestamp with time zone");
+                    b.Property<string>("Commentaire")
+                        .HasColumnType("text");
 
-                b.Property<string>("Decision")
-                    .HasColumnType("text");
+                    b.Property<DateTime>("DateValidation")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Decision")
+                        .HasColumnType("integer");
 
                 b.Property<int>("EnseignantId")
                     .HasColumnType("integer");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.HasIndex("CandidatureId");
+                    b.HasIndex("CandidatureId");
 
-                b.HasIndex("EnseignantId");
+                    b.HasIndex("EnseignantId");
 
-                b.ToTable("Validations");
-            });
+                    b.ToTable("Validations");
+                });
 
-            // Relations
+            modelBuilder.Entity("backend.Models.Candidature", b =>
+                {
+                    b.HasOne("backend.Models.OffreStage", "OffreDeStage")
+                        .WithMany("Candidatures")
+                        .HasForeignKey("OffreDeStageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            modelBuilder.Entity("Candidature", b =>
-            {
-                b.HasOne("OffreDeStage")
-                    .WithMany()
-                    .HasForeignKey("OffreDeStageId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
+                    b.HasOne("backend.Models.User", "User")
+                        .WithMany("Candidatures")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                b.HasOne("User")
-                    .WithMany()
-                    .HasForeignKey("UserId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
-            });
+                    b.Navigation("OffreDeStage");
 
-            modelBuilder.Entity("OffreDeStage", b =>
-            {
-                b.HasOne("Entreprise")
-                    .WithMany()
-                    .HasForeignKey("EntrepriseId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
-            });
+                    b.Navigation("User");
+                });
 
-            modelBuilder.Entity("Validation", b =>
-            {
-                b.HasOne("Candidature")
-                    .WithMany()
-                    .HasForeignKey("CandidatureId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
+            modelBuilder.Entity("backend.Models.OffreStage", b =>
+                {
+                    b.HasOne("backend.Models.Entreprise", "Entreprise")
+                        .WithMany("OffresStages")
+                        .HasForeignKey("EntrepriseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                b.HasOne("User")
-                    .WithMany()
-                    .HasForeignKey("EnseignantId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
-            });
+                    b.Navigation("Entreprise");
+                });
+
+            modelBuilder.Entity("backend.Models.Validation", b =>
+                {
+                    b.HasOne("backend.Models.Candidature", "Candidature")
+                        .WithMany()
+                        .HasForeignKey("CandidatureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("backend.Models.User", "Enseignant")
+                        .WithMany()
+                        .HasForeignKey("EnseignantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Candidature");
+
+                    b.Navigation("Enseignant");
+                });
+
+            modelBuilder.Entity("backend.Models.Entreprise", b =>
+                {
+                    b.Navigation("OffresStages");
+                });
+
+            modelBuilder.Entity("backend.Models.OffreStage", b =>
+                {
+                    b.Navigation("Candidatures");
+                });
+
+            modelBuilder.Entity("backend.Models.User", b =>
+                {
+                    b.Navigation("Candidatures");
+                });
 #pragma warning restore 612, 618
         }
     }

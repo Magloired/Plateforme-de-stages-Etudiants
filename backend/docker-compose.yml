@@ -1,0 +1,31 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5196:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Database=StagePlatformDB;Username=postgres;Password=Gl0ryg@m&rkhAn.*
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: StagePlatformDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "Gl0ryg@m&rkhAn.*"
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
