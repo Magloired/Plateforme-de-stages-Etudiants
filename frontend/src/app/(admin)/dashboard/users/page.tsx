@@ -1,43 +1,21 @@
 import Link from "next/link";
-
-
 import { ContentLayout } from "@/components/admin-panel/content-layout";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator
-} from "@/components/ui/breadcrumb";
+import { BreadcrumbNav } from "@/components/admin-panel/breadcrumb-nav";
+import UsersPage from "@/components/users/UsersPage";
 
-export default function UsersPage() {
+
+export default function UsersPages() {
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Users", isCurrentPage: true }
+  ];
+
   return (
     <ContentLayout title="Users">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/">Home</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/dashboard">Dashboard</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Users</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <BreadcrumbNav items={breadcrumbItems} />
       <div className="mt-4">
-        <h1 className="text-2xl font-bold">Users Management</h1>
-        <p className="text-muted-foreground">
-          Manage your users, roles, and permissions.
-        </p>
+        <UsersPage />
       </div>
     </ContentLayout>
   );

@@ -20,6 +20,11 @@ interface PasswordStrength {
   color: string;
 }
 
+
+const role = "admin"
+
+const redirect = ` ${role ==="admin"? "/admin" : "/student"}`
+
 export default function RegisterPage() {
   const [formData, setFormData] = useState<RegisterFormData>({
     nom: '',
