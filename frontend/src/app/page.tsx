@@ -33,9 +33,7 @@ export default function Home() {
             Plus de 1000 stages disponibles
           </div>
 
-          <Button asChild>
-            <Link href="/dashboard" className='bg-blue-600 text-white'>dashboard</Link>
-          </Button>
+
 
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
             Bienvenue sur la
@@ -65,6 +63,10 @@ export default function Home() {
                   Connexion administration
               </Link>
             </p>
+
+            <Button asChild>
+            <Link href="/dashboard" className='bg-blue-600 text-white'>dashboard (...access) </Link>
+          </Button>
           </div>
 
           {/* Stats Section */}
