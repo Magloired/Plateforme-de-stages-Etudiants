@@ -82,7 +82,7 @@ namespace backend.Services
         /// <summary>
         /// Authenticates a user and returns a JWT token if credentials are valid.
         /// </summary>
-        public async Task<string?> LoginAsync(LoginDTO dto)
+        /*public async Task<string?> LoginAsync(LoginDTO dto)
         {
             var user = await _userRepo.GetByEmailAsync(dto.Email);
             if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
@@ -110,7 +110,51 @@ namespace backend.Services
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }*/
+        public async Task<AuthResultDTO?> LoginAsync(LoginDTO dto)
+        {
+            var user = await _userRepo.GetByEmailAsync(dto.Email);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
+                return null;
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Nom ?? string.Empty),
+                new Claim(ClaimTypes.Role, user.Role.ToString())
+            };
+
+            var jwtKey = _config["Jwt:Key"];
+            if (string.IsNullOrEmpty(jwtKey))
+                throw new InvalidOperationException("JWT key is not configured.");
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddHours(2),
+                signingCredentials: creds
+            );
+
+            return new AuthResultDTO
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                User = new UserDTO
+                {
+                    Id = user.Id,
+                    Nom = user.Nom,
+                    Prenom = user.Prenom,
+                    Email = user.Email,
+                    Role = user.Role.ToString(),
+                    Telephone = user.Telephone,
+                    // tu peux ajouter d'autres champs utiles
+                }
+            };
         }
+
 
         /// <summary>
         /// Validates the registration input.

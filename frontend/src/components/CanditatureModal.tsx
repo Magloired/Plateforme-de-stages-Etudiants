@@ -16,7 +16,7 @@ export default function CandidatureModal({ stage, form, onChange, onClose, onSub
         <div className="p-6 border-b border-gray-200 flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">Candidature</h2>
-            <p className="text-gray-600">{stage.titre} - {stage.entreprise}</p>
+            <p className="text-gray-600">{stage.titre} - {stage.entreprise.nom}</p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full" title="Fermer">
             <X size={24} />

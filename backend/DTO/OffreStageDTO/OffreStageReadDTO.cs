@@ -1,3 +1,5 @@
+using backend.DTO.EntrepriseDTO;
+
 namespace backend.DTO.OffreStageDTO
 {
     public class OffreStageReadDTO
@@ -11,10 +13,12 @@ namespace backend.DTO.OffreStageDTO
         public string? TypeStage { get; set; }
         public decimal? Remuneration { get; set; }
         public DateTime? DateLimiteCandidature { get; set; }
-        public bool IstActive { get; set; }
+        public bool IsActive { get; set; } = true;
 
         // Infos simplifiées de l'entreprise
-        public int EntrepriseId { get; set; }
-        public string EntrepriseNom { get; set; } = null!;
+        //public int EntrepriseId { get; set; }
+        //public string EntrepriseNom { get; set; } = null!;
+
+        public EntrepriseReadDTO Entreprise { get; set; } = null!;
     }
 }
