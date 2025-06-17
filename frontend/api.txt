@@ -1,5 +1,3 @@
-K. Robert Ages
-2:18 PM
 http://localhost:5196/api/entreprise
 [
   {
@@ -20,6 +18,8 @@ http://localhost:5196/api/entreprise
     "nom": "Agence Afrique Digitale",
     "description": "Entreprise
 http://localhost:5196/api/offres
+
+
 [
   {
     "id": 1,
@@ -30,17 +30,17 @@ http://localhost:5196/api/offres
     "lieu": "Lomé",
     "typeStage": "Temps plein",
     "remuneration": 150,
-    "dateLimiteCandidature": "2025-07-31T23:59:59Z",
-    "istActive": false,
-    "entrepriseId": 1,
-    "entrepriseNom": "Tech Innov"
-  },
-  {
-    "id": 2,
-    "titre": "Stage en Sécurité de Serveur c
+    "dateLimiteCandidature": "2025-07-01T23:59:59Z",
+    "isActive": true,
+    "entreprise": {
+      "id": 1,
+      "nom": "Tech Innov",
+      "description": "Entreprise spécialisée dans le développemt"
+    }
+]
+
 http://localhost:5196/api/candidature
-K. Robert Ages
-2:19 PM
+
 [
   {
     "id": 2,
@@ -67,6 +67,39 @@ http://localhost:5196/api/validation
   }
 ]
 
-K. Robert Ages
-2:52 PM
-https://ckeditor.com/ckeditor-5/
+
+http://localhost:5196/api/users
+{
+  "id": 1,
+  "nom": "Doe",
+  "prenom": "John", 
+  "email": "john.doe@example.com",
+  "passwordHash": "$2a$11$examplehashvalue",
+  avatar_url: "https://example.com/avatars/john_doe.png",
+  "role": "Etudiant", 
+  "dateInscription": "2025-06-17T10:00:00Z",
+  "isActif": true, 
+  "filiere": "IRT",
+  "niveauEtude": "M2", 
+  "telephone": "‪+22890000000‬",
+  "candidatures": [] 
+}
+
+
+
+namespace backend.Models.Enums
+{
+    public enum Role
+    {
+        Etudiant,
+        Enseignant,
+        Responsable,
+        Admin,
+    }
+}
+
+ #Role:
+ Etudiant,
+ Enseignant,
+ Responsable,
+ Admin,

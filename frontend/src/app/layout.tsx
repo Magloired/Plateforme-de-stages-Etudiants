@@ -1,6 +1,6 @@
 import { Roboto } from 'next/font/google'
 import './globals.css'
-import { ThemeProvider } from '@/components/providers/theme-provider';
+import { ThemeProvider } from '@/providers/theme-provider';
 
 const roboto = Roboto({
   subsets: ['latin'],
@@ -14,7 +14,6 @@ const roboto = Roboto({
 export const metadata = {
   title: "Plateforme de gestion de stage",
   description: "Application pour la gestion des stages étudiants, suivi des entreprises, encadrants, et rapports.",
-  themeColor: "#0F172A",
   manifest: "/manifest.json",
   icons: {
     icon: "/icons/icon-192x192.png",

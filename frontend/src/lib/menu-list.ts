@@ -102,8 +102,8 @@ export function getMenuList(pathname: string): Group[] {
           ],
         },
         {
-          href: "/dashboard/candidatures/mes",
-          label: "Mes Candidatures",
+          href: "/dashboard/candidatures/",
+          label: "Candidatures",
           icon: Bookmark,
         },
         {
