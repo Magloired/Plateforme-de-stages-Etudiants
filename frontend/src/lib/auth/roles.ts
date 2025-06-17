@@ -1,5 +1,4 @@
 export const roles = [
-  "SUPER_ADMIN",
   "ADMIN",
   "TEACHER",
   "STUDENT",

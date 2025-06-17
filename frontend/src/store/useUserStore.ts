@@ -2,9 +2,9 @@ import { create } from "zustand";
 
 /**
  * Enumération des rôles possibles dans l'application
- * @typedef {("SUPER_ADMIN" | "ADMIN" | "TEACHER" | "STUDENT" | "GUEST")} Role
+ * @typedef {( "ADMIN" | "TEACHER" | "STUDENT" )} Role
  */
-export type Role = "SUPER_ADMIN" | "ADMIN" | "TEACHER" | "STUDENT" | "GUEST";
+export type Role = "ADMIN" | "TEACHER" | "STUDENT" ;
 
 /**
  * Interface représentant un utilisateur dans l'application
