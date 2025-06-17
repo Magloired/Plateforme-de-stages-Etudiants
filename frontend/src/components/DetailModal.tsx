@@ -1,5 +1,6 @@
 import { Stage } from './types';
 import { Calendar, Award, MapPin, Clock, DollarSign, Building, X } from 'lucide-react';
+import { Entreprise } from '@/app/types/offreType'; 
 
 export default function DetailModal({
   stage,
@@ -32,7 +33,7 @@ export default function DetailModal({
           <h1 className="text-3xl font-bold text-gray-900 mb-2">{stage.titre}</h1>
           <div className="flex items-center gap-2 text-xl text-gray-600 mb-4">
             <Building size={20} />
-            <span className="font-semibold">{stage.entreprise}</span>
+            <span className="font-semibold">{stage.entreprise.nom}</span>
           </div>
 
           <span className={`px-4 py-2 text-sm font-bold rounded-full ${getStatutColor(stage.statut)}`}>
@@ -41,13 +42,13 @@ export default function DetailModal({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
             <div className="space-y-2">
-              <div className="flex items-center gap-2 text-gray-700"><MapPin size={18} /> Ville: {stage.ville}</div>
-              <div className="flex items-center gap-2 text-gray-700"><Clock size={18} /> Durée: {stage.duree}</div>
+              <div className="flex items-center gap-2 text-gray-700"><MapPin size={18} /> Ville: {stage.lieu}</div>
+              <div className="flex items-center gap-2 text-gray-700"><Clock size={18} /> Durée: {stage.dureeMois}</div>
               <div className="flex items-center gap-2 text-gray-700"><Award size={18} /> Niveau: {stage.niveau}</div>
             </div>
             <div className="space-y-2">
-              <div className="flex items-center gap-2 text-gray-700"><Calendar size={18} /> Début: {new Date(stage.dateDebut).toLocaleDateString('fr-FR')}</div>
-              <div className="flex items-center gap-2 text-gray-700"><Calendar size={18} /> Fin: {new Date(stage.dateFin).toLocaleDateString('fr-FR')}</div>
+              <div className="flex items-center gap-2 text-gray-700"><Calendar size={18} /> Début: {new Date(stage.datePublication).toLocaleDateString('fr-FR')}</div>
+              <div className="flex items-center gap-2 text-gray-700"><Calendar size={18} /> Fin: {new Date(stage.dateLimiteCandidature).toLocaleDateString('fr-FR')}</div>
               {stage.remuneration && (
                 <div className="flex items-center gap-2 text-gray-700"><DollarSign size={18} /> Rémunération: {stage.remuneration}</div>
               )}
@@ -56,13 +57,19 @@ export default function DetailModal({
 
           <p className="text-gray-700 mb-6">{stage.description}</p>
 
-          <h3 className="text-lg font-bold mb-2">Compétences requises</h3>
-          <div className="flex flex-wrap gap-2 mb-6">
-            {stage.competencesRequises.map((comp, i) => (
-              <span key={i} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">{comp}</span>
-            ))}
-          </div>
-
+          {Array.isArray(stage.competencesRequises) && stage.competencesRequises.length > 0 ? (
+            <>
+              <h3 className="text-lg font-bold mb-2 text-gray-800">Compétences requises</h3>
+              <div className="flex flex-wrap gap-2 mb-6">
+                {stage.competencesRequises.map((comp, i) => (
+                  <span key={i} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">{comp}</span>
+                ))}
+              </div>
+            </>
+          ) : (
+            <span className="text-gray-500">Aucune compétence spécifiée.</span>
+          )}
+          
           <div className="flex gap-4 pt-4 border-t">
             <button onClick={onClose} className="flex-1 py-3 border rounded-xl text-gray-700 hover:bg-gray-100">Fermer</button>
             <button onClick={onApply} className="flex-1 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700">Postuler maintenant</button>
