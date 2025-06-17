@@ -1,88 +1,87 @@
+
+import { fetchFromAPI } from "@/lib/api";
+import { RegisterFormData } from "@/app/types/loginForms";
 interface LoginCredentials {
   email: string;
   password: string;
+}
+interface User {
+  id: number;
+  nom: string;
+  prenom: string;
+  email: string;
+  role: string;
+  isActif: boolean;
+  dateInscription: string;
+  filiere?: string | null;
+  niveauEtude?: string | null;
+  telephone?: string | null;
+  specialite?: string | null;
 }
 
 interface AuthResponse {
   success: boolean;
   message?: string;
   token?: string;
-  user?: {
-    id: string;
-    email: string;
-    nom: string;
-    prenom: string;
-  };
+  user?: User;
 }
 
-// Simuler une "base de données" temporaire
-let registeredUsers: any[] = [];
-
 export const authService = {
-  register: async (userData: any): Promise<AuthResponse> => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Sauvegarder les données d'inscription dans le localStorage
-    const newUser = {
-      id: Date.now().toString(),
-      email: userData.email,
-      password: userData.password,
-      nom: userData.nom,
-      prenom: userData.prenom,
-      telephone: userData.telephone
-    };
-    
-    // Sauvegarder dans notre "base de données" temporaire
-    registeredUsers.push(newUser);
-    localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
-    
-    return { success: true };
+  register: async (userData: RegisterFormData): Promise<AuthResponse> => {
+    const { confirmPassword, ...payload } = userData;
+
+    try {
+      const response = await fetchFromAPI("auth/register", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+
+      if (response.token) {
+        localStorage.setItem("token", response.token);
+      }
+
+      return {
+        success: true,
+        message: response.message || "Inscription réussie",
+        token: response.token,
+        //user: response.user,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message || "Erreur d'inscription",
+      };
+    }
   },
 
   login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
+  try {
+    const result = await fetchFromAPI("auth/login", {
+      method: "POST",
+      body: JSON.stringify(credentials),
+    });
 
-    // Récupérer les utilisateurs enregistrés
-    const savedUsers = localStorage.getItem('registeredUsers');
-    const users = savedUsers ? JSON.parse(savedUsers) : [];
-    
-    // Rechercher l'utilisateur
-    const user = users.find((u: any) => 
-      u.email === credentials.email && u.password === credentials.password
-    );
-
-    if (user) {
-      const token = 'mock-jwt-token-' + user.id;
-      const userWithoutPassword = {
-        id: user.id,
-        email: user.email,
-        nom: user.nom,
-        prenom: user.prenom
-      };
-      
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(userWithoutPassword));
-      
+    if (!result.token) {
       return {
-        success: true,
-        token,
-        user: userWithoutPassword
+        success: false,
+        message: result.message || "Aucun token reçu",
       };
     }
 
+    localStorage.setItem("token", result.token);
+
+    return {
+      success: true,
+      token: result.token,
+      user: result.user,
+    };
+  } catch (error: any) {
+    // erreur fetchFromAPI erreur HTTP
     return {
       success: false,
-      message: 'Email ou mot de passe incorrect'
+      message: error.message || "Erreur de connexion",
     };
-  },
-
-  logout: () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    window.location.href = '/login';
-  },
-
-  isAuthenticated: () => {
-    return !!localStorage.getItem('token');
   }
+}
+
 };

@@ -1,8 +1,20 @@
 
+import { fetchFromAPI } from '@/lib/api';  // ta fonction utilitaire
+//import StageCard from './StageCard';       // ton composant carte
+//import { Stage } from '@/app/types/offreType';
+import { Entreprise } from '@/app/types/offreType';  
+
+import { Stage } from './types';
 
 import React from 'react';
 import { Building, Clock, MapPin, Eye } from 'lucide-react';
-import { Stage } from './types';
+//import { Stage } from '@/app/types/offreType';
+
+interface StageCardProps {
+  stage: Stage;
+  onOpenDetails: (stage: Stage) => void;
+  onApply: (stage: Stage) => void;
+}
 
 interface StageCardProps {
   stage: Stage;
@@ -11,16 +23,29 @@ interface StageCardProps {
 }
 
 export default function StageCard({ stage, onOpenDetails, onApply }: StageCardProps) {
-  const getStatutColor = (statut: string) => {
-    switch (statut) {
-      case 'Urgent':
-        return 'bg-red-500 text-white';
-      case 'Bientôt fermé':
-        return 'bg-orange-500 text-white';
-      default:
-        return 'bg-green-500 text-white';
+  const getStatutColorFromDates = (stage: Stage): { statut: string; colorClass: string } | null => {
+    if (!stage.isActive) return null;
+
+    const now = new Date();
+    const datePub = new Date(stage.datePublication);
+    const dateLimite = new Date(stage.dateLimiteCandidature);
+
+    const diffDaysTotal = (dateLimite.getTime() - datePub.getTime()) / (1000 * 60 * 60 * 24);
+    const diffDaysRemaining = (dateLimite.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
+
+    if (diffDaysRemaining <= 5) {
+      return { statut: 'Bientôt fermé', colorClass: 'bg-orange-500 text-white' };
     }
+
+    if (diffDaysTotal <= 10) {
+      return { statut: 'Urgent', colorClass: 'bg-red-500 text-white' };
+    }
+
+    return { statut: 'Ouvert', colorClass: 'bg-green-500 text-white' };
   };
+
+  const statusInfo = getStatutColorFromDates(stage);
+
 
   return (
     <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden h-full flex flex-col">
@@ -30,24 +55,26 @@ export default function StageCard({ stage, onOpenDetails, onApply }: StageCardPr
             <h2 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 leading-tight">{stage.titre}</h2>
             <div className="flex items-center gap-2 text-gray-600 mb-2">
               <Building size={16} className="flex-shrink-0" />
-              <span className="font-semibold text-gray-800 truncate">{stage.entreprise}</span>
+              <span className="font-semibold text-gray-800 truncate">{stage.entreprise.nom}</span>
             </div>
           </div>
-          <span
-            className={`px-3 py-1 text-xs font-bold rounded-full ${getStatutColor(stage.statut)} flex-shrink-0 ml-2`}
-          >
-            {stage.statut}
-          </span>
+          {statusInfo && (
+            <span
+              className={`px-3 py-1 text-xs font-bold rounded-full ${statusInfo.colorClass} flex-shrink-0 ml-2`}
+            >
+              {statusInfo.statut}
+            </span>
+          )}
         </div>
 
         <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
           <div className="flex items-center gap-1">
             <MapPin size={14} />
-            <span>{stage.ville}</span>
+            <span>{stage.lieu}</span>
           </div>
           <div className="flex items-center gap-1">
             <Clock size={14} />
-            <span>{stage.duree}</span>
+            <span>{stage.dureeMois} mois</span>
           </div>
         </div>
 
