@@ -7,6 +7,7 @@ import {
   Star,
   TrendingUp,
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 // Correction ici : éviter d'appeler `new Date()` dans le JSX
 const currentYear = new Date().getFullYear();
@@ -31,6 +32,10 @@ export default function Home() {
             <Star className="h-4 w-4" />
             Plus de 1000 stages disponibles
           </div>
+
+          <Button asChild>
+            <Link href="/dashboard" className='bg-blue-600 text-white'>dashboard</Link>
+          </Button>
 
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
             Bienvenue sur la
@@ -57,6 +62,10 @@ export default function Home() {
               <Link href="/admin/login" className="ml-2 inline-flex items-center gap-2 px-6 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors">
                 <Building2 className="h-4 w-4" />
                 Connexion administration
+              <Link href="/admin/login" className="ml-2 inline-flex items-center gap-2 px-6 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors" >
+            
+                  <Building2 className="h-4 w-4" />
+                  Connexion administration
               </Link>
             </p>
           </div>

@@ -8,6 +8,11 @@ import AuthRightPanel from '@/components/studentLayouts/authRightPanel';
 import RegisterForm from '@/components/studentLayouts/RegisterForm';
 
 
+
+const role = "admin"
+
+const redirect = ` ${role ==="admin"? "/admin" : "/student"}`
+
 export default function RegisterPage() {
 
   return (

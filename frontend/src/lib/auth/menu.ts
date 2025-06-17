@@ -88,7 +88,7 @@ export function getMenuList(role: Role): Group[] {
     contentsMenus.push({ href: "", label: "Entreprises", icon: Building2, submenus });
   }
 
-  if (role === "STUDENT" && can("CANDIDATURE", "CREATE")) {
+  if (role === "Etudiant" && can("CANDIDATURE", "CREATE")) {
     contentsMenus.push({
       href: "/dashboard/candidatures/mes",
       label: "Mes Candidatures",
@@ -96,7 +96,7 @@ export function getMenuList(role: Role): Group[] {
     });
   }
 
-  if ((role === "TEACHER" || role === "ADMIN" ) && can("VALIDATION", "READ")) {
+  if ((role === "Enseignant" || role === "Admin" ) && can("VALIDATION", "READ")) {
     contentsMenus.push({
       href: "/dashboard/validations",
       label: "Validations",

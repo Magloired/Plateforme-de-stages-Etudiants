@@ -53,7 +53,7 @@ export const rolePermissions: Record<
   Role,
   Record<Resource, Action[]>
 > = {
-  ADMIN: {
+  Admin: {
     OFFRE: ["CREATE", "READ", "UPDATE", "DELETE"],
     ENTREPRISE: ["CREATE", "READ", "UPDATE", "DELETE"],
     CANDIDATURE: ["READ"],
@@ -61,7 +61,7 @@ export const rolePermissions: Record<
     USER: ["READ", "UPDATE"],
     SETTINGS: ["READ", "UPDATE"],
   },
-  TEACHER: {
+  Enseignant: {
     OFFRE: ["READ"],
     ENTREPRISE: ["READ"],
     CANDIDATURE: ["READ"],
@@ -69,7 +69,7 @@ export const rolePermissions: Record<
     USER: ["READ"],
     SETTINGS: [],
   },
-  STUDENT: {
+  Etudiant: {
     OFFRE: ["READ"],
     ENTREPRISE: ["READ"],
     CANDIDATURE: ["CREATE", "READ"],
@@ -77,7 +77,7 @@ export const rolePermissions: Record<
     USER: ["READ"],
     SETTINGS: [],
   },
-  GUEST: {
+  Responsable: {
     OFFRE: [],
     ENTREPRISE: [],
     CANDIDATURE: [],
