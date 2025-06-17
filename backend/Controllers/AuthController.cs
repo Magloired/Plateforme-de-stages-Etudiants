@@ -55,7 +55,7 @@ public class AuthController : ControllerBase
     /// </summary>
     /// <param name="dto">The login data transfer object containing email and password.</param>
     /// <returns>The logged-in user if credentials are valid, otherwise null.</returns>
-    [HttpPost("login")]
+    /*[HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDTO dto)
     {
         if (dto == null)
@@ -63,14 +63,8 @@ public class AuthController : ControllerBase
             return BadRequest("Invalid login data.");
         }
 
-        /*var token await _authService.LoginAsync(dto);
-
-        if (token == null)
-        {
-            return Unauthorized("Invalid email or password.");
-        }*/
-
         var user = await _authService.LoginAsync(dto);
+
         if (user == null)
         {
             return Unauthorized("Invalid email or password.");
@@ -79,5 +73,21 @@ public class AuthController : ControllerBase
         return Ok(user);
         //return Ok( new { token = token, user = user });
 
+    }*/
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginDTO dto)
+    {
+        if (dto == null)
+        {
+            return BadRequest("Invalid login data.");
+        }
+
+        var result = await _authService.LoginAsync(dto);
+        if (result == null)
+        {
+            return Unauthorized("Invalid email or password.");
+        }
+
+        return Ok(result);
     }
 }
