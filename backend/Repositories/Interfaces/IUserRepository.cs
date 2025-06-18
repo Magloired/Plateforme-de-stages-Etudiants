@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using backend.Models;
+using backend.Models.Enums;
 
 namespace backend.Repositories.Interfaces
 {
@@ -54,5 +55,7 @@ namespace backend.Repositories.Interfaces
         /// <param name="email">The email to check.</param>
         /// <returns>True if the email exists, false otherwise.</returns>
         Task<bool> EmailExistsAsync(string email);
+
+        Task<IEnumerable<User>> GetUsersByRoleAsync(Role role);
     }
 }

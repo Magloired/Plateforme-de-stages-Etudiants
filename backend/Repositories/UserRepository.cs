@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using backend.Models;
 using backend.Data;
 using backend.Repositories.Interfaces;
+using backend.Models.Enums;
 
 namespace backend.Repositories
 {
@@ -104,10 +105,9 @@ namespace backend.Repositories
         /// </summary>
         /// <param name="role">The role to filter users by.</param>
         /// <returns>A collection of users with the specified role.</returns>
-        public async Task<IEnumerable<User>> GetUsersByRoleAsync(string role)
+        public async Task<IEnumerable<User>> GetUsersByRoleAsync(Role role)
         {
-            return await _context.Users.Where(u => u.Role.ToString() == role).ToListAsync();
+            return await _context.Users.Where(u => u.Role == role).ToListAsync();
         }
-
     }
 }
