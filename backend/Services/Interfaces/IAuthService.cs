@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using backend.Models;
-using backend.DTO;
-using backend.Repositories.Interfaces;
+using backend.DTO.UserDTO;
 
 namespace backend.Services.Interfaces
 {
@@ -19,7 +18,8 @@ namespace backend.Services.Interfaces
         /// </summary>
         /// <param name="dto">The login credentials.</param>
         /// <returns>A JWT token if login is successful, null otherwise.</returns>
-        Task<string?> LoginAsync(LoginDTO dto);
+        //Task<string?> LoginAsync(LoginDTO dto);
+        Task<AuthResultDTO?> LoginAsync(LoginDTO dto);
 
         /// <summary>
         /// Checks if an email is already registered.

@@ -1,44 +1,38 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using backend.DTO;
+using backend.DTO.OffreStageDTO;
 
 namespace backend.Services.Interfaces
 {
     /// <summary>
-    /// Interface for the Offre service.
-    /// This interface defines the methods for managing Offre entities.
+    /// Interface for managing OffreStage business logic.
     /// </summary>
     public interface IOffreService
     {
         /// <summary>
-        /// Gets all Offre entities.
+        /// Gets all OffreStage entities.
         /// </summary>
-        /// <returns>A collection of Offre DTOs.</returns>
-        Task<IEnumerable<OffreStageDTO>> GetAllOffresAsync();
+        /// <returns>List of read-only DTOs.</returns>
+        Task<IEnumerable<OffreStageReadDTO>> GetAllOffresAsync();
 
         /// <summary>
-        /// Gets an Offre entity by its ID.
+        /// Gets a specific OffreStage by ID.
         /// </summary>
-        /// <param name="id">The ID of the Offre.</param>
-        /// <returns>The Offre DTO.</returns>
-        Task<OffreStageDTO> GetOffreByIdAsync(int id);
+        Task<OffreStageReadDTO> GetOffreByIdAsync(int id);
 
         /// <summary>
-        /// Adds a new Offre entity.
+        /// Creates a new OffreStage.
         /// </summary>
-        /// <param name="offreStageDTO">The Offre DTO to add.</param>
-        Task AddOffreAsync(OffreStageDTO offreStageDTO);
+        Task<OffreStageReadDTO> AddOffreAsync(OffreStageCreateDTO dto);
 
         /// <summary>
-        /// Updates an existing Offre entity.
+        /// Updates an existing OffreStage.
         /// </summary>
-        /// <param name="offreStageDTO">The Offre DTO to update.</param>
-        Task UpdateOffreAsync(OffreStageDTO offreStageDTO);
+        Task UpdateOffreAsync(int id, OffreStageUpdateDTO dto);
 
         /// <summary>
-        /// Deletes an Offre entity by its ID.
+        /// Deletes an OffreStage by ID.
         /// </summary>
-        /// <param name="id">The ID of the Offre to delete.</param>
         Task DeleteOffreAsync(int id);
     }
 }

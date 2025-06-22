@@ -33,7 +33,8 @@ namespace backend.Repositories
         /// <returns>A collection of Offre entities.</returns>
         public async Task<IEnumerable<OffreStage>> GetAllOffresAsync()
         {
-            return await _context.Offres.ToListAsync();
+            //return await _context.Offres.ToListAsync();
+            return await _context.Offres.Include(o => o.Entreprise).ToListAsync();
         }
 
         /// <summary>
