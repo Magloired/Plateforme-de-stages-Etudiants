@@ -21,6 +21,7 @@ export interface UserDTO {
   id: number;
   nom?: string;
   prenom?: string;
+  avatar_url?: string;
   email: string;
   role: Role;
   isActif: boolean;

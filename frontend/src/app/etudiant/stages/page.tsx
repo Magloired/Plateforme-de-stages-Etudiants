@@ -8,6 +8,9 @@ import DetailModal from '@/components/DetailModal';
 import CandidatureModal from '@/components/CanditatureModal';
 import { fetchFromAPI } from '@/lib/api';
 import { Stage, CandidatureForm } from '@/components/types';
+import { apiService } from '@/services/api';
+import { toast } from 'sonner';
+import { CandidatureCreateDTO } from '@/types';
 
 export default function StagesPage() {
   const [stages, setStages] = useState<Stage[]>([]);
@@ -38,7 +41,7 @@ export default function StagesPage() {
     'Stage pré-emploi',
     'Stage académique',
     "Stage de fin d'études",
-    'Stage d’été',
+    'Stage d\'été',
     'Stage professionnel',
   ];
   const secteurs = ['Informatique', 'Marketing', 'Finance', 'Sécurité IT', 'Commerce'];
@@ -91,22 +94,38 @@ export default function StagesPage() {
     e.preventDefault();
     if (!selectedStage) return;
 
-    const formData = new FormData();
-    formData.append('Nom', candidatureForm.nom);
-    formData.append('Prenom', candidatureForm.prenom);
-    formData.append('Email', candidatureForm.email);
-    formData.append('Telephone', candidatureForm.telephone);
-    if (candidatureForm.cv) formData.append('CV', candidatureForm.cv);
-    if (candidatureForm.motivation) formData.append('LettreMotivation', candidatureForm.motivation);
-    formData.append('StageId', selectedStage.id);
+    setLoading(true);
+    try {
+      // TODO: Récupérer l'ID de l'utilisateur connecté depuis le contexte d'authentification
+      // Pour l'instant, on utilise un ID temporaire
+      const currentUserId = 1; // À remplacer par l'ID de l'utilisateur connecté
+      
+      // Créer l'objet CandidatureCreateDTO selon le typage
+      const candidatureData: CandidatureCreateDTO = {
+        userId: currentUserId,
+        offreDeStageId: parseInt(selectedStage.id),
+        documentUrl: candidatureForm.cv ? URL.createObjectURL(candidatureForm.cv) : undefined
+      };
 
-    await fetch('https://localhost:5001/api/candidatures', {
-      method: 'POST',
-      body: formData,
-    });
-
-    alert('Candidature envoyée avec succès !');
-    closeModals();
+      await apiService.candidatures.create(candidatureData);
+      toast.success("Candidature envoyée avec succès");
+      closeModals();
+      
+      // Réinitialiser le formulaire
+      setCandidatureForm({
+        nom: '',
+        prenom: '',
+        email: '',
+        telephone: '',
+        motivation: null,
+        cv: null,
+      });
+    } catch (error) {
+      console.error("Erreur de candidature :", error);
+      toast.error("Erreur lors de l'envoi de la candidature");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

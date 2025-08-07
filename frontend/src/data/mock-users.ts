@@ -1,6 +1,6 @@
-import { type User, Role } from "@/types/user"
+import { type UserDTO, Role } from "@/types/user";
 
-export const mockUsers: User[] = [
+export const mockUsers: UserDTO[] = [
   {
     id: 1,
     nom: "Dupont",
@@ -13,10 +13,7 @@ export const mockUsers: User[] = [
     filiere: "Informatique",
     niveauEtude: "Master 1",
     telephone: "06 12 34 56 78",
-    candidatures: [
-      { id: 1, titre: "Stage développeur web", statut: "En cours", datePostulation: "2024-01-15" },
-      { id: 2, titre: "Alternance data analyst", statut: "Acceptée", datePostulation: "2024-02-01" },
-    ],
+    specialite: undefined,
   },
   {
     id: 2,
@@ -30,7 +27,7 @@ export const mockUsers: User[] = [
     filiere: "Mathématiques",
     niveauEtude: "Doctorat",
     telephone: "06 23 45 67 89",
-    candidatures: [],
+    specialite: undefined,
   },
   {
     id: 3,
@@ -44,7 +41,7 @@ export const mockUsers: User[] = [
     filiere: "Commerce",
     niveauEtude: "Licence 3",
     telephone: "06 34 56 78 90",
-    candidatures: [{ id: 3, titre: "Stage marketing", statut: "Refusée", datePostulation: "2024-03-01" }],
+    specialite: undefined,
   },
   {
     id: 4,
@@ -58,7 +55,7 @@ export const mockUsers: User[] = [
     filiere: "Gestion",
     niveauEtude: "Master 2",
     telephone: "06 45 67 89 01",
-    candidatures: [],
+    specialite: undefined,
   },
   {
     id: 5,
@@ -72,7 +69,7 @@ export const mockUsers: User[] = [
     filiere: "Droit",
     niveauEtude: "Master 1",
     telephone: "06 56 78 90 12",
-    candidatures: [{ id: 4, titre: "Stage cabinet d'avocat", statut: "En cours", datePostulation: "2024-02-15" }],
+    specialite: undefined,
   },
   {
     id: 6,
@@ -86,7 +83,7 @@ export const mockUsers: User[] = [
     filiere: "Administration",
     niveauEtude: "Master 2",
     telephone: "06 67 89 01 23",
-    candidatures: [],
+    specialite: undefined,
   },
   {
     id: 7,
@@ -100,7 +97,7 @@ export const mockUsers: User[] = [
     filiere: "Psychologie",
     niveauEtude: "Licence 2",
     telephone: "06 78 90 12 34",
-    candidatures: [],
+    specialite: undefined,
   },
   {
     id: 8,
@@ -114,7 +111,7 @@ export const mockUsers: User[] = [
     filiere: "Physique",
     niveauEtude: "Doctorat",
     telephone: "06 89 01 23 45",
-    candidatures: [],
+    specialite: undefined,
   },
   {
     id: 9,
@@ -128,10 +125,7 @@ export const mockUsers: User[] = [
     filiere: "Médecine",
     niveauEtude: "Licence 1",
     telephone: "06 90 12 34 56",
-    candidatures: [
-      { id: 5, titre: "Stage hôpital", statut: "Acceptée", datePostulation: "2024-01-20" },
-      { id: 6, titre: "Bénévolat croix rouge", statut: "En cours", datePostulation: "2024-03-10" },
-    ],
+    specialite: undefined,
   },
   {
     id: 10,
@@ -145,7 +139,7 @@ export const mockUsers: User[] = [
     filiere: "Ingénierie",
     niveauEtude: "Doctorat",
     telephone: "06 01 23 45 67",
-    candidatures: [],
+    specialite: undefined,
   },
   {
     id: 11,
@@ -159,7 +153,7 @@ export const mockUsers: User[] = [
     filiere: "Arts",
     niveauEtude: "Master 1",
     telephone: "06 12 34 56 78",
-    candidatures: [{ id: 7, titre: "Stage musée", statut: "Refusée", datePostulation: "2024-02-28" }],
+    specialite: undefined,
   },
   {
     id: 12,
@@ -173,7 +167,7 @@ export const mockUsers: User[] = [
     filiere: "Informatique",
     niveauEtude: "Licence 3",
     telephone: "06 23 45 67 89",
-    candidatures: [{ id: 8, titre: "Stage développement mobile", statut: "En cours", datePostulation: "2024-03-05" }],
+    specialite: undefined,
   },
   {
     id: 13,
@@ -187,7 +181,7 @@ export const mockUsers: User[] = [
     filiere: "Littérature",
     niveauEtude: "Doctorat",
     telephone: "06 34 56 78 90",
-    candidatures: [],
+    specialite: undefined,
   },
   {
     id: 14,
@@ -201,7 +195,7 @@ export const mockUsers: User[] = [
     filiere: "Économie",
     niveauEtude: "Master 2",
     telephone: "06 45 67 89 01",
-    candidatures: [{ id: 9, titre: "Stage banque", statut: "Acceptée", datePostulation: "2024-01-10" }],
+    specialite: undefined,
   },
   {
     id: 15,
@@ -215,6 +209,6 @@ export const mockUsers: User[] = [
     filiere: "Administration",
     niveauEtude: "Master 2",
     telephone: "06 56 78 90 12",
-    candidatures: [],
+    specialite: undefined,
   },
-]
+];

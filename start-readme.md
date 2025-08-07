@@ -113,6 +113,18 @@ docker exec -it backend-db-1 psql -U postgres -d StagePlatformDB
 | Redémarrage des services      | `docker-compose restart`                           |
 | Nettoyage complet             | `docker-compose down -v && docker system prune -f` |
 
+
+# Voir les logs des conteneurs
+docker-compose logs
+
+# Arrêter les conteneurs
+docker-compose down
+
+# Redémarrer les conteneurs
+docker-compose restart
+
+# Voir le statut des conteneurs
+docker-compose ps
 ---
 
 ## 6. Dépannage
