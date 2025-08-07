@@ -102,6 +102,7 @@ builder.Services.AddAuthorization();
 
 // Injection des services métiers
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOffreService, OffreService>();
 builder.Services.AddScoped<IEntrepriseService, EntrepriseService>();
 builder.Services.AddScoped<ICandidatureService, CandidatureService>();

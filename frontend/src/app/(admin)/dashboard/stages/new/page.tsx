@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 
 export default function NewStagePage() {
   return (
-    <div className="container mx-auto py-6">
-      <h1 className="text-2xl font-bold mb-6">Créer une nouvelle offre de stage</h1>
-      {/* Formulaire de création à implémenter */}
+    <div className="container mx-auto py-6 gap-4">
+      <h1 className="text-2xl text-center font-bold ">Créer une nouvelle offre de stage</h1>
+
       <CreateOffreStageForm/>
     </div>
   );

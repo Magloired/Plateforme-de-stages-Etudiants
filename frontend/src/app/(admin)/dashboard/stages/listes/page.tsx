@@ -18,6 +18,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Plus, Search, Edit, Trash2, Eye, Calendar, MapPin, DollarSign, Clock } from 'lucide-react'
 import { toast } from '@/hooks/use-toast'
+import Link from 'next/link'
 
 export default function StagesPage() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -140,10 +141,10 @@ export default function StagesPage() {
                   Gérez toutes les offres de stage disponibles
                 </CardDescription>
               </div>
-              <Button>
+              <Link href="/dashboard/stages/new">
                 <Plus className="mr-2 h-4 w-4" />
                 Ajouter une offre
-              </Button>
+              </Link>
             </div>
           </CardHeader>
           <CardContent>

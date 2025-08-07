@@ -19,7 +19,6 @@ import { useState } from 'react'
 import { Plus, Search, Edit, Trash2, Eye, Calendar, User, CheckCircle, XCircle, MessageSquare } from 'lucide-react'
 import { toast } from '@/hooks/use-toast'
 import { DecisionValidation } from '@/types'
-import Link from 'next/link'
 
 export default function ValidationsPage() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -141,10 +140,6 @@ export default function ValidationsPage() {
                   Gérez toutes les validations de candidatures
                 </CardDescription>
               </div>
-              <Link href="/dashboard/validations/new">
-                <Plus className="mr-2 h-4 w-4" />
-                Nouvelle validation
-              </Link>
             </div>
           </CardHeader>
           <CardContent>
