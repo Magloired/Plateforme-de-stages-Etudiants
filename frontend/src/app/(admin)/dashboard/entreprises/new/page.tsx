@@ -1,15 +1,23 @@
-import { Metadata } from "next";
+"use client"
 
-export const metadata: Metadata = {
-  title: "Nouvelle Entreprise",
-  description: "Créer une nouvelle entreprise",
-};
+import { ContentLayout } from '@/components/admin-panel/content-layout'
+import { CreateEntrepriseForm } from '@/components/forms/CreateEntrepriseForm'
 
 export default function NewCompanyPage() {
   return (
-    <div className="container mx-auto py-6">
-      <h1 className="text-2xl font-bold mb-6">Créer une nouvelle entreprise</h1>
-      {/* Formulaire de création à implémenter */}
-    </div>
-  );
+    <ContentLayout title="Nouvelle Entreprise">
+      <div className="space-y-6">
+        {/* En-tête */}
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Créer une nouvelle entreprise</h1>
+          <p className="text-muted-foreground">
+            Ajoutez une nouvelle entreprise partenaire à la plateforme
+          </p>
+        </div>
+
+        {/* Formulaire */}
+        <CreateEntrepriseForm />
+      </div>
+    </ContentLayout>
+  )
 } 

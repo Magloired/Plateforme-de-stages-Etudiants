@@ -6,10 +6,10 @@
 // Configuration de l'application
 export const APP_CONFIG = {
   // Mode de développement
-  IS_MOCK_MODE: process.env.NEXT_PUBLIC_USE_MOCK === "true",
+  IS_MOCK_MODE: process.env.NEXT_PUBLIC_USE_MOCK === "true" || true, // Activé par défaut pour les tests
 
   // URL de l'API
-  API_BASE_URL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5196/api",
+  API_BASE_URL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api",
 
   // Configuration des timeouts
   API_TIMEOUT: 5000,

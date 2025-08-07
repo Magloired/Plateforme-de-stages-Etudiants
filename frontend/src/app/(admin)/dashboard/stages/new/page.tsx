@@ -1,3 +1,4 @@
+import CreateOffreStageForm from "@/components/stage/CreateSageForm";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,6 +11,7 @@ export default function NewStagePage() {
     <div className="container mx-auto py-6">
       <h1 className="text-2xl font-bold mb-6">Créer une nouvelle offre de stage</h1>
       {/* Formulaire de création à implémenter */}
+      <CreateOffreStageForm/>
     </div>
   );
 } 

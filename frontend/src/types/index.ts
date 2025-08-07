@@ -3,7 +3,19 @@
  */
 
 // Types utilisateur
-export type { User, Role, Candidature } from "./user"
+export * from "./user"
+
+// Types entreprise
+export * from "./entreprise"
+
+// Types offre de stage
+export * from "./offre-de-stage"
+
+// Types candidature
+export * from "./candidature"
+
+// Types validation
+export * from "./validation"
 
 // Types API
 export type {

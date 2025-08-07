@@ -1,3 +1,11 @@
+
+
+//types/user.ts
+
+/**
+ * Enum représentant les rôles possibles d'un utilisateur dans le système.
+ * Doit correspondre à l'énumération backend `Role`.
+ */
 export enum Role {
   Etudiant = "Etudiant",
   Enseignant = "Enseignant",
@@ -5,24 +13,57 @@ export enum Role {
   Admin = "Admin",
 }
 
-export interface Candidature {
-  id: number
-  titre: string
-  statut: string
-  datePostulation: string
+/**
+ * DTO utilisé pour représenter un utilisateur authentifié ou enregistré.
+ * Il correspond au modèle retourné dans l'API ou utilisé dans les vues (profil, dashboard...).
+ */
+export interface UserDTO {
+  id: number;
+  nom?: string;
+  prenom?: string;
+  email: string;
+  role: Role;
+  isActif: boolean;
+  dateInscription: string; // Date ISO
+  filiere?: string;
+  niveauEtude?: string;
+  telephone?: string;
+  specialite?: string; // Utilise l'enum Specialite depuis entreprise.ts
 }
 
-export interface User {
-  id: number
-  nom: string
-  prenom: string
-  avatar_url: string
-  email: string
-  role: Role
-  dateInscription: string
-  isActif: boolean
-  filiere: string
-  niveauEtude: string
-  telephone: string
-  candidatures: Candidature[]
+/**
+ * DTO utilisé lors de la tentative de connexion d'un utilisateur (requête POST /login).
+ */
+export interface LoginDTO {
+  email: string;
+  password: string;
 }
+
+/**
+ * DTO retourné après une authentification réussie.
+ * Contient le token JWT et les données de l'utilisateur.
+ */
+export interface AuthResultDTO {
+  token: string;
+  user: UserDTO;
+  message: string;
+}
+
+/**
+ * DTO utilisé lors de l'inscription d'un nouvel utilisateur (requête POST /register).
+ */
+export interface RegisterDTO {
+  nom: string;
+  prenom: string;
+  email: string;
+  password: string;
+  role: Role;
+  filiere?: string;
+  niveauEtude?: string;
+  telephone?: string;
+}
+
+
+
+
+

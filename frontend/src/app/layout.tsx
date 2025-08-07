@@ -1,6 +1,7 @@
 import { Roboto } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/providers/theme-provider';
+import { MockModeToggle } from '@/components/dev-tools/mock-mode-toggle';
 
 const roboto = Roboto({
   subsets: ['latin'],
@@ -59,6 +60,7 @@ export default function RootLayout({
           <main className="min-h-screen bg-gray-50">
             {children}
           </main>
+          <MockModeToggle />
         </ThemeProvider>
       </body>
     </html>

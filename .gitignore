@@ -406,3 +406,5 @@ FodyWeavers.xsd
 *.sln.iml
 note.txt
 note.txt
+
+.early.coverage
