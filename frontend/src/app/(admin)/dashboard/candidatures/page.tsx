@@ -13,15 +13,25 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { apiService } from '@/services/api'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-import { Plus, Search, Edit, Trash2, Eye, Calendar, User, FileText, CheckCircle, XCircle, Clock } from 'lucide-react'
+import { Plus, Search, Edit, Trash2, Eye, Calendar, User, FileText, CheckCircle, XCircle, Clock, CheckSquare, XSquare } from 'lucide-react'
 import { toast } from '@/hooks/use-toast'
-import { StatutCandidature } from '@/types'
+import { StatutCandidature, ValidationCreateDTO, DecisionValidation } from '@/types'
 
 export default function CandidaturesPage() {
   const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCandidature, setSelectedCandidature] = useState<any>(null)
+  const [isValidationModalOpen, setIsValidationModalOpen] = useState(false)
+  const [validationData, setValidationData] = useState({
+    decision: DecisionValidation.Accepte,
+    commentaire: ''
+  })
+  const [isValidating, setIsValidating] = useState(false)
   const queryClient = useQueryClient()
 
   // Requête pour récupérer toutes les candidatures
@@ -49,6 +59,29 @@ export default function CandidaturesPage() {
     },
   })
 
+  // Mutation pour créer une validation
+  const createValidationMutation = useMutation({
+    mutationFn: (validationData: ValidationCreateDTO) => apiService.validations.create(validationData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['candidatures'] })
+      queryClient.invalidateQueries({ queryKey: ['validations'] })
+      toast({
+        title: "Succès",
+        description: "Validation créée avec succès",
+      })
+      setIsValidationModalOpen(false)
+      setSelectedCandidature(null)
+      setValidationData({ decision: DecisionValidation.Accepte, commentaire: '' })
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Erreur",
+        description: error.message || "Erreur lors de la création de la validation",
+        variant: "destructive",
+      })
+    },
+  })
+
   // Filtrer les candidatures selon la recherche
   const filteredCandidatures = candidatures?.filter(candidature => 
     candidature.nomCandidat.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -71,6 +104,32 @@ export default function CandidaturesPage() {
   const handleDeleteCandidature = (id: number) => {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette candidature ?')) {
       deleteCandidatureMutation.mutate(id)
+    }
+  }
+
+  const handleOpenValidationModal = (candidature: any) => {
+    setSelectedCandidature(candidature)
+    setValidationData({ decision: DecisionValidation.Accepte, commentaire: '' })
+    setIsValidationModalOpen(true)
+  }
+
+  const handleValidationSubmit = async () => {
+    if (!selectedCandidature) return
+
+    setIsValidating(true)
+    try {
+      const validationPayload: ValidationCreateDTO = {
+        enseignantId: 1, // TODO: Récupérer l'ID de l'enseignant connecté
+        candidatureId: selectedCandidature.id,
+        decision: validationData.decision,
+        commentaire: validationData.commentaire || undefined
+      }
+
+      await createValidationMutation.mutateAsync(validationPayload)
+    } catch (error) {
+      console.error("Erreur lors de la validation:", error)
+    } finally {
+      setIsValidating(false)
     }
   }
 
@@ -237,6 +296,14 @@ export default function CandidaturesPage() {
                             <Button variant="ghost" size="sm">
                               <Eye className="h-4 w-4" />
                             </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => handleOpenValidationModal(candidature)}
+                              className="text-blue-600 hover:text-blue-700"
+                            >
+                              <CheckSquare className="h-4 w-4" />
+                            </Button>
                             <Button variant="ghost" size="sm">
                               <Edit className="h-4 w-4" />
                             </Button>
@@ -259,6 +326,105 @@ export default function CandidaturesPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Modal de validation */}
+      <Dialog open={isValidationModalOpen} onOpenChange={setIsValidationModalOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Valider une candidature</DialogTitle>
+            <DialogDescription>
+              Validez ou refusez la candidature de {selectedCandidature?.nomCandidat} pour l&apos;offre &quot;{selectedCandidature?.titreOffre}&quot;
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            {/* Informations de la candidature */}
+            <div className="p-4 bg-muted rounded-lg">
+              <h4 className="font-medium mb-2">Informations de la candidature</h4>
+              <div className="space-y-1 text-sm">
+                <p><span className="font-medium">Candidat:</span> {selectedCandidature?.nomCandidat}</p>
+                <p><span className="font-medium">Offre:</span> {selectedCandidature?.titreOffre}</p>
+                <p><span className="font-medium">Date de soumission:</span> {selectedCandidature?.dateSoumission ? new Date(selectedCandidature.dateSoumission).toLocaleDateString('fr-FR') : 'N/A'}</p>
+                <p><span className="font-medium">Statut actuel:</span> {selectedCandidature?.statut}</p>
+              </div>
+            </div>
+
+            {/* Décision */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Décision *</label>
+              <Select 
+                value={validationData.decision} 
+                onValueChange={(value) => setValidationData(prev => ({ ...prev, decision: value as DecisionValidation }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionner une décision" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={DecisionValidation.Accepte}>
+                    <div className="flex items-center">
+                      <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
+                      Accepter
+                    </div>
+                  </SelectItem>
+                  <SelectItem value={DecisionValidation.Refuse}>
+                    <div className="flex items-center">
+                      <XCircle className="mr-2 h-4 w-4 text-red-600" />
+                      Refuser
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Commentaire */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Commentaire (optionnel)</label>
+              <Textarea
+                placeholder="Ajoutez un commentaire sur votre décision..."
+                value={validationData.commentaire}
+                onChange={(e) => setValidationData(prev => ({ ...prev, commentaire: e.target.value }))}
+                rows={3}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button 
+              variant="outline" 
+              onClick={() => setIsValidationModalOpen(false)}
+              disabled={isValidating}
+            >
+              Annuler
+            </Button>
+            <Button 
+              onClick={handleValidationSubmit}
+              disabled={isValidating}
+              className={validationData.decision === DecisionValidation.Accepte ? "bg-green-600 hover:bg-green-700" : "bg-red-600 hover:bg-red-700"}
+            >
+              {isValidating ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Validation...
+                </>
+              ) : (
+                <>
+                  {validationData.decision === DecisionValidation.Accepte ? (
+                    <>
+                      <CheckCircle className="mr-2 h-4 w-4" />
+                      Accepter
+                    </>
+                  ) : (
+                    <>
+                      <XCircle className="mr-2 h-4 w-4" />
+                      Refuser
+                    </>
+                  )}
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </ContentLayout>
   )
 }
