@@ -8,12 +8,12 @@ export default function NewCompanyPage() {
     <ContentLayout title="Nouvelle Entreprise">
       <div className="space-y-6">
         {/* En-tête */}
-        <div>
+        {/* <div>
           <h1 className="text-3xl font-bold tracking-tight">Créer une nouvelle entreprise</h1>
           <p className="text-muted-foreground">
             Ajoutez une nouvelle entreprise partenaire à la plateforme
           </p>
-        </div>
+        </div> */}
 
         {/* Formulaire */}
         <CreateEntrepriseForm />

@@ -202,10 +202,6 @@ export default function CandidaturesPage() {
                   Gérez toutes les candidatures reçues
                 </CardDescription>
               </div>
-              <Button>
-                <Plus className="mr-2 h-4 w-4" />
-                Nouvelle candidature
-              </Button>
             </div>
           </CardHeader>
           <CardContent>

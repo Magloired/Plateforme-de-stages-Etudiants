@@ -57,16 +57,14 @@ export default function Home() {
             </Link>
             <p className="text-gray-600">
               Vous êtes responsable ?
-              <Link href="/admin/login" className="ml-2 inline-flex items-center gap-2 px-6 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors" >
+              <Link href="/auth/login" className="ml-2 inline-flex items-center gap-2 px-6 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors" >
             
                   <Building2 className="h-4 w-4" />
                   Connexion administration
               </Link>
             </p>
 
-            <Button asChild>
-            <Link href="/dashboard" className='bg-blue-600 text-white'>dashboard (...access) </Link>
-          </Button>
+
           </div>
 
           {/* Stats Section */}

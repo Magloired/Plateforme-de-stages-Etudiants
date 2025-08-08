@@ -1,21 +1,21 @@
 import { APP_CONFIG } from "@/config/app-config"
 import { mockApiService } from "./mock-data"
-import type {
-  UserDTO,
+import {
   Role,
-  EntrepriseReadDTO,
-  EntrepriseCreateDTO,
-  EntrepriseUpdateDTO,
-  OffreStageReadDTO,
-  OffreStageCreateDTO,
-  OffreStageUpdateDTO,
-  CandidatureReadDTO,
-  CandidatureCreateDTO,
-  CandidatureUpdateDTO,
-  StatutCandidature,
-  ValidationReadDTO,
-  ValidationCreateDTO,
-  ValidationUpdateDTO,
+  type UserDTO,
+  type EntrepriseReadDTO,
+  type EntrepriseCreateDTO,
+  type EntrepriseUpdateDTO,
+  type OffreStageReadDTO,
+  type OffreStageCreateDTO,
+  type OffreStageUpdateDTO,
+  type CandidatureReadDTO,
+  type CandidatureCreateDTO,
+  type CandidatureUpdateDTO,
+  type StatutCandidature,
+  type ValidationReadDTO,
+  type ValidationCreateDTO,
+  type ValidationUpdateDTO,
 } from "@/types"
 import type { DashboardStats } from "@/types/dashboard"
 
@@ -48,12 +48,17 @@ export const apiService = {
   auth: {
     login: async (credentials: LoginDTO): Promise<AuthResultDTO> => {
       if (APP_CONFIG.IS_MOCK_MODE) {
+        // Vérification des identifiants en mode mock - uniquement compte admin principal
+        if (credentials.email !== "admin@stages.com" || credentials.password !== "Admin123!") {
+          throw new Error("Email ou mot de passe incorrect");
+        }
+
         return mockApiService.auth?.login?.(credentials) || {
           token: "mock-token-123",
           user: {
             id: 1,
             nom: "Admin",
-            prenom: "Mock",
+            prenom: "Super",
             email: credentials.email,
             role: Role.Admin,
             isActif: true,
