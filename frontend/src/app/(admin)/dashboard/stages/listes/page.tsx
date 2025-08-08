@@ -213,7 +213,7 @@ export default function StagesPage() {
                             {offre.remuneration && (
                               <div className="flex items-center text-sm">
                                 <DollarSign className="mr-1 h-3 w-3" />
-                                {offre.remuneration}€/mois
+                                {offre.remuneration} FCFA/mois
                               </div>
                             )}
                             {offre.typeStage && (

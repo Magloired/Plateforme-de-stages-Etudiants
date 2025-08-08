@@ -13,7 +13,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner"
 import { apiService } from "@/services/api" // Utiliser le service API principal
 import { OffreStageCreateDTO } from "@/types/offre-de-stage"
-import { Specialite } from "@/types/entreprise"
 import { EntrepriseSelect } from "@/components/forms/EntrepriseSelect"
 
 const formSchema = z.object({
@@ -66,7 +65,9 @@ export default function CreateOffreStageForm() {
         lieu: values.lieu || undefined,
         typeStage: values.typeStage || undefined,
         remuneration: values.remuneration || undefined,
-        dateLimiteCandidature: values.dateLimiteCandidature || undefined,
+        dateLimiteCandidature: values.dateLimiteCandidature 
+          ? new Date(values.dateLimiteCandidature + 'T00:00:00Z').toISOString()
+          : undefined,
         entrepriseId: values.entrepriseId
       }
 
@@ -141,7 +142,7 @@ export default function CreateOffreStageForm() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="remuneration">Rémunération (€)</Label>
+          <Label htmlFor="remuneration">Rémunération (FCFA)</Label>
           <Input type="number" id="remuneration" {...register("remuneration")} />
           {errors.remuneration && <p className="text-sm text-destructive">{errors.remuneration.message}</p>}
         </div>
