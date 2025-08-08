@@ -43,7 +43,10 @@ namespace backend.Repositories
         /// <param name="id">The ID of the Offre.</param>
         public async Task<OffreStage> GetOffreByIdAsync(int id)
         {
-            var offre = await _context.Offres.FindAsync(id);
+            var offre = await _context.Offres
+                .Include(o => o.Entreprise)
+                .FirstOrDefaultAsync(o => o.Id == id);
+                
             if (offre == null)
             {
                 throw new KeyNotFoundException($"Offre with id {id} not found.");

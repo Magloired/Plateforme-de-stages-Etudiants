@@ -1,9 +1,12 @@
 'use client';
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { authService } from '@/services/authService';
-import { Eye, EyeOff, User, Mail, Phone, Lock, CheckCircle, XCircle } from 'lucide-react';
+import { CheckCircle, XCircle, Mail, Lock, User, Phone, Eye, EyeOff } from 'lucide-react';
+import { apiService } from '@/services/api';
+import { RegisterDTO, Role, AuthResultDTO } from '@/types';
+import { toast } from 'sonner';
 
 interface RegisterFormData {
   nom: string;
@@ -11,7 +14,10 @@ interface RegisterFormData {
   email: string;
   password: string;
   confirmPassword: string;
-  telephone: string; 
+  telephone: string;
+  role: Role;
+  filiere?: string;
+  niveauEtude?: string;
 }
 
 interface PasswordStrength {
@@ -27,14 +33,17 @@ export default function RegisterPage() {
     email: '',
     password: '',
     confirmPassword: '',
-    telephone: ''  
+    telephone: '',
+    role: Role.Etudiant,
+    filiere: '',
+    niveauEtude: ''
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState<Partial<RegisterFormData>>({});
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
   const router = useRouter();
 
@@ -50,6 +59,9 @@ export default function RegisterPage() {
       case 'telephone':
         const phoneRegex = /^[0-9]{8}$/;
         return !phoneRegex.test(value) ? 'Format: 8 chiffres (ex: 90000000)' : '';
+      case 'role':
+        const validRoles = Object.values(Role);
+        return !validRoles.includes(value as Role) ? 'Veuillez sélectionner un rôle valide' : '';
       case 'password':
         if (value.length < 8) return 'Minimum 8 caractères';
         if (!/(?=.*[a-z])/.test(value)) return 'Au moins une minuscule';
@@ -84,12 +96,12 @@ export default function RegisterPage() {
     return { score, ...strengthMap[score as keyof typeof strengthMap] };
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: name === 'role' ? value as Role : value
     }));
 
     // Validation en temps réel pour les champs touchés
@@ -105,7 +117,7 @@ export default function RegisterPage() {
     setSuccess('');
   };
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setTouchedFields(prev => new Set(prev).add(name));
     
@@ -118,14 +130,13 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
 
     // Validation complète
-    const errors: Partial<RegisterFormData> = {};
+    const errors: Record<string, string> = {};
     Object.keys(formData).forEach(key => {
-      const error = validateField(key, formData[key as keyof RegisterFormData]);
-      if (error) errors[key as keyof RegisterFormData] = error;
+      const value = formData[key as keyof RegisterFormData];
+      const error = validateField(key, String(value));
+      if (error) errors[key] = error;
     });
 
     if (Object.keys(errors).length > 0) {
@@ -137,17 +148,39 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      const response = await authService.register(formData);
-      if (response.success) {
+      // Créer l'objet RegisterDTO selon le typage backend
+      const registerData: RegisterDTO = {
+        nom: formData.nom,
+        prenom: formData.prenom,
+        email: formData.email,
+        password: formData.password,
+        role: formData.role,
+        telephone: formData.telephone,
+        filiere: formData.filiere,
+        niveauEtude: formData.niveauEtude
+      };
+
+      const response: AuthResultDTO = await apiService.auth.register(registerData);
+      
+      if (response.token) {
         setSuccess('Compte créé avec succès ! Redirection en cours...');
+        toast.success('Inscription réussie !');
+        
+        // Stocker le token et les données utilisateur
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('user', JSON.stringify(response.user));
+        
         setTimeout(() => {
           router.push('/login?registered=true');
         }, 2000);
       } else {
-        setError(response.message || 'Erreur lors de l\'inscription');
+        setError('Erreur lors de l\'inscription');
+        toast.error('Erreur lors de l\'inscription');
       }
-    } catch (err) {
-      setError('Une erreur est survenue. Veuillez réessayer plus tard.');
+    } catch (err: any) {
+      const errorMessage = err.message || 'Une erreur est survenue. Veuillez réessayer plus tard.';
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -174,7 +207,7 @@ export default function RegisterPage() {
             </div>
           </div>
           <h1 className="text-4xl font-bold mb-6 leading-tight">Rejoignez-nous</h1>
-          <p className="text-xl opacity-90 mb-8">Créez votre compte étudiant pour accéder aux offres de stage</p>
+          <p className="text-xl opacity-90 mb-8">Créez votre compte pour accéder à la plateforme de stages</p>
           <div className="flex items-center justify-center space-x-6 text-sm opacity-75">
             <div className="flex items-center">
               <CheckCircle className="w-4 h-4 mr-2" />
@@ -323,6 +356,80 @@ export default function RegisterPage() {
                   <p className="mt-1 text-sm text-red-600">{fieldErrors.telephone}</p>
                 )}
               </div>
+
+              {/* Rôle */}
+              <div>
+                <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
+                  Rôle *
+                </label>
+                <div className="relative">
+                  <select
+                    id="role"
+                    name="role"
+                    required
+                    className={`w-full px-4 py-3 pl-10 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
+                      fieldErrors.role ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-blue-500'
+                    }`}
+                    value={formData.role}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  >
+                    <option value={Role.Etudiant}>Étudiant</option>
+                    <option value={Role.Enseignant}>Enseignant</option>
+                    <option value={Role.Responsable}>Responsable</option>
+                  </select>
+                  <User className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+                </div>
+                {fieldErrors.role && (
+                  <p className="mt-1 text-sm text-red-600">{fieldErrors.role}</p>
+                )}
+              </div>
+
+              {/* Filière et Niveau d'étude (pour les étudiants) */}
+              {formData.role === Role.Etudiant && (
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="filiere" className="block text-sm font-medium text-gray-700 mb-2">
+                      Filière
+                    </label>
+                    <div className="relative">
+                      <input
+                        id="filiere"
+                        name="filiere"
+                        type="text"
+                        className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                        value={formData.filiere}
+                        onChange={handleChange}
+                        placeholder="ex: Informatique"
+                      />
+                      <User className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="niveauEtude" className="block text-sm font-medium text-gray-700 mb-2">
+                      Niveau d'étude
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="niveauEtude"
+                        name="niveauEtude"
+                        className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                        value={formData.niveauEtude}
+                        onChange={handleChange}
+                      >
+                        <option value="">Sélectionner</option>
+                        <option value="L1">Licence 1</option>
+                        <option value="L2">Licence 2</option>
+                        <option value="L3">Licence 3</option>
+                        <option value="M1">Master 1</option>
+                        <option value="M2">Master 2</option>
+                      </select>
+                      <User className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Mot de passe */}
               <div>

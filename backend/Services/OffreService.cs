@@ -39,9 +39,18 @@ namespace backend.Services
         public async Task<OffreStageReadDTO> AddOffreAsync(OffreStageCreateDTO dto)
         {
             var offre = _mapper.Map<OffreStage>(dto);
+            
+            // Définir la date de publication à la date actuelle
+            offre.DatePublication = System.DateTime.UtcNow;
+            
+            // S'assurer que l'offre est active par défaut
+            offre.IsActive = true;
+            
             await _offreRepository.AddOffreAsync(offre);
-            // Ici, offre.Id est rempli après ajout en base (selon implémentation)
-            return _mapper.Map<OffreStageReadDTO>(offre);
+            
+            // Récupérer l'offre avec l'entreprise pour le mapping
+            var offreWithEntreprise = await _offreRepository.GetOffreByIdAsync(offre.Id);
+            return _mapper.Map<OffreStageReadDTO>(offreWithEntreprise);
         }
 
         public async Task UpdateOffreAsync(int id, OffreStageUpdateDTO dto)

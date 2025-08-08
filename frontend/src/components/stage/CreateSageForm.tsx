@@ -11,7 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "sonner"
-import { apiService } from "@/services/api-hybrid" // Service hybride
+import { apiService } from "@/services/api" // Utiliser le service API principal
 import { OffreStageCreateDTO } from "@/types/offre-de-stage"
 import { Specialite } from "@/types/entreprise"
 import { EntrepriseSelect } from "@/components/forms/EntrepriseSelect"
@@ -56,12 +56,31 @@ export default function CreateOffreStageForm() {
   const onSubmit = async (values: FormValues) => {
     setLoading(true)
     try {
-      await apiService.offresDeStage.create(values as OffreStageCreateDTO)
+      console.log("Données du formulaire:", values)
+      
+      // Transformation des données pour correspondre au backend
+      const offreData: OffreStageCreateDTO = {
+        titre: values.titre,
+        description: values.description || undefined,
+        dureeMois: values.dureeMois,
+        lieu: values.lieu || undefined,
+        typeStage: values.typeStage || undefined,
+        remuneration: values.remuneration || undefined,
+        dateLimiteCandidature: values.dateLimiteCandidature || undefined,
+        entrepriseId: values.entrepriseId
+      }
+
+      console.log("Données envoyées à l'API:", offreData)
+      
+      const response = await apiService.offresDeStage.create(offreData)
+      console.log("Réponse de l'API:", response)
+      
       toast.success("Offre créée avec succès")
       reset()
-    } catch (error) {
-      console.error("Erreur création :", error)
-      toast.error("Erreur lors de la création")
+    } catch (error: any) {
+      console.error("Erreur création:", error)
+      const errorMessage = error.message || "Erreur lors de la création de l'offre"
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -77,14 +96,14 @@ export default function CreateOffreStageForm() {
       <div className="flex flex-col gap-2">
         <Label htmlFor="titre">Titre *</Label>
         <Input id="titre" {...register("titre")} />
-        {errors.titre && <p className="text-sm text-red-500">{errors.titre.message}</p>}
+        {errors.titre && <p className="text-sm text-destructive">{errors.titre.message}</p>}
       </div>
 
       {/* Description - pleine largeur */}
       <div className="flex flex-col gap-2">
         <Label htmlFor="description">Description</Label>
         <Textarea id="description" {...register("description")} />
-        {errors.description && <p className="text-sm text-red-500">{errors.description.message}</p>}
+        {errors.description && <p className="text-sm text-destructive">{errors.description.message}</p>}
       </div>
 
       {/* Durée et Lieu côte à côte */}
@@ -92,13 +111,13 @@ export default function CreateOffreStageForm() {
         <div className="flex flex-col gap-2">
           <Label htmlFor="dureeMois">Durée (mois) *</Label>
           <Input type="number" id="dureeMois" {...register("dureeMois")} />
-          {errors.dureeMois && <p className="text-sm text-red-500">{errors.dureeMois.message}</p>}
+          {errors.dureeMois && <p className="text-sm text-destructive">{errors.dureeMois.message}</p>}
         </div>
 
         <div className="flex flex-col gap-2">
           <Label htmlFor="lieu">Lieu</Label>
           <Input id="lieu" {...register("lieu")} />
-          {errors.lieu && <p className="text-sm text-red-500">{errors.lieu.message}</p>}
+          {errors.lieu && <p className="text-sm text-destructive">{errors.lieu.message}</p>}
         </div>
       </div>
 
@@ -106,14 +125,25 @@ export default function CreateOffreStageForm() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="flex flex-col gap-2">
           <Label htmlFor="typeStage">Type de stage</Label>
-          <Input id="typeStage" {...register("typeStage")} />
-          {errors.typeStage && <p className="text-sm text-red-500">{errors.typeStage.message}</p>}
+          <Select onValueChange={(value) => setValue("typeStage", value)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Sélectionner un type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="PFE">Projet de Fin d&apos;Études</SelectItem>
+              <SelectItem value="Stage">Stage</SelectItem>
+              <SelectItem value="Alternance">Alternance</SelectItem>
+              <SelectItem value="CDI">CDI</SelectItem>
+              <SelectItem value="CDD">CDD</SelectItem>
+            </SelectContent>
+          </Select>
+          {errors.typeStage && <p className="text-sm text-destructive">{errors.typeStage.message}</p>}
         </div>
 
         <div className="flex flex-col gap-2">
           <Label htmlFor="remuneration">Rémunération (€)</Label>
           <Input type="number" id="remuneration" {...register("remuneration")} />
-          {errors.remuneration && <p className="text-sm text-red-500">{errors.remuneration.message}</p>}
+          {errors.remuneration && <p className="text-sm text-destructive">{errors.remuneration.message}</p>}
         </div>
       </div>
 
@@ -122,7 +152,7 @@ export default function CreateOffreStageForm() {
         <Label htmlFor="dateLimiteCandidature">Date limite de candidature</Label>
         <Input type="date" id="dateLimiteCandidature" {...register("dateLimiteCandidature")} />
         {errors.dateLimiteCandidature && (
-          <p className="text-sm text-red-500">{errors.dateLimiteCandidature.message}</p>
+          <p className="text-sm text-destructive">{errors.dateLimiteCandidature.message}</p>
         )}
       </div>
 
@@ -134,8 +164,8 @@ export default function CreateOffreStageForm() {
         required={true}
       />
 
-      <Button className="bg-card border hover:bg-muted" type="submit" disabled={loading}>
-        <p className=""> {loading ? "Création..." : "Créer l'offre de stage"} </p>
+      <Button type="submit" disabled={loading}>
+        {loading ? "Création..." : "Créer l'offre de stage"}
       </Button>
     </form>
   )

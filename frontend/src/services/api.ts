@@ -197,7 +197,17 @@ export const apiService = {
         body: JSON.stringify(offre),
       })
       if (!response.ok) {
-        throw new Error("Échec de la création de l'offre")
+        console.error("Erreur API:", response.status, response.statusText)
+        
+        // Essayer de récupérer les détails de l'erreur
+        try {
+          const errorDetails = await response.json()
+          console.error("Détails de l'erreur:", errorDetails)
+          throw new Error(errorDetails.message || errorDetails.details || `Échec de la création de l'offre (${response.status})`)
+        } catch (parseError) {
+          console.error("Impossible de parser l'erreur:", parseError)
+          throw new Error(`Échec de la création de l'offre (${response.status}: ${response.statusText})`)
+        }
       }
       return response.json()
     },

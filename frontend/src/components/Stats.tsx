@@ -13,7 +13,7 @@ export default function Stats({ statsData }: { statsData: any }) {
 
 function StatCard({ icon, value, label }: { icon: React.ReactNode; value: number; label: string }) {
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-8 text-center border-l-4 border-blue-500 hover:shadow-xl transition-shadow">
+    <div className="bg-white rounded-2xl shadow-lg p-8 text-center border border-blue-500 hover:shadow-xl transition-shadow">
       <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 text-white">
         {icon}
       </div>

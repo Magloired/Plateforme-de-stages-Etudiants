@@ -56,13 +56,62 @@ namespace Backend.Controllers
         //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddOffre([FromBody] OffreStageCreateDTO offreStageCreateDTO)
         {
-            if (offreStageCreateDTO == null)
+            try
             {
-                return BadRequest("Offre data is null.");
-            }
+                Console.WriteLine($"=== Début création offre ===");
+                Console.WriteLine($"Données reçues: {System.Text.Json.JsonSerializer.Serialize(offreStageCreateDTO)}");
+                
+                if (offreStageCreateDTO == null)
+                {
+                    Console.WriteLine("Erreur: OffreStageCreateDTO est null");
+                    return BadRequest("Offre data is null.");
+                }
 
-            var createdOffre = await _offreService.AddOffreAsync(offreStageCreateDTO);
-            return CreatedAtAction(nameof(GetOffreById), new { id = createdOffre.Id }, createdOffre);
+                // Validation supplémentaire
+                if (string.IsNullOrWhiteSpace(offreStageCreateDTO.Titre))
+                {
+                    Console.WriteLine("Erreur: Titre est vide");
+                    return BadRequest("Titre is required.");
+                }
+
+                if (offreStageCreateDTO.DureeMois <= 0)
+                {
+                    Console.WriteLine("Erreur: DureeMois invalide");
+                    return BadRequest("DureeMois must be greater than 0.");
+                }
+
+                if (offreStageCreateDTO.EntrepriseId <= 0)
+                {
+                    Console.WriteLine("Erreur: EntrepriseId invalide");
+                    return BadRequest("EntrepriseId is required.");
+                }
+
+                Console.WriteLine("Validation OK, appel du service...");
+                var createdOffre = await _offreService.AddOffreAsync(offreStageCreateDTO);
+                Console.WriteLine($"Offre créée avec succès, ID: {createdOffre.Id}");
+                
+                return CreatedAtAction(nameof(GetOffreById), new { id = createdOffre.Id }, createdOffre);
+            }
+            catch (Exception ex)
+            {
+                // Log l'erreur pour le débogage
+                Console.WriteLine($"=== ERREUR CRÉATION OFFRE ===");
+                Console.WriteLine($"Message: {ex.Message}");
+                Console.WriteLine($"Type: {ex.GetType().Name}");
+                Console.WriteLine($"StackTrace: {ex.StackTrace}");
+                
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                    Console.WriteLine($"Inner StackTrace: {ex.InnerException.StackTrace}");
+                }
+                
+                return StatusCode(500, new { 
+                    message = "Une erreur interne s'est produite lors de la création de l'offre.",
+                    details = ex.Message,
+                    type = ex.GetType().Name
+                });
+            }
         }
 
         /// <summary>
