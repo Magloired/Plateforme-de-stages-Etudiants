@@ -75,6 +75,14 @@ dotnet tool update --global dotnet-ef
 # Supprimer la config précédente de DB
 dotnet ef migrations add UpdateModel
 
+#Demarrer le projet sans docker
+dotnet restore
+dotnet build
+dotnet run
+
+# Démarage avec docker 
+## 
+
 ```
 | Package                                           | Utilité principale                                                |
 |---------------------------------------------------|-------------------------------------------------------------------|
