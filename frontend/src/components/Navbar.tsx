@@ -204,7 +204,7 @@ export function Navbar() {
                       <GraduationCap className="h-5 w-5 text-primary-foreground" />
                     </div>
                     <div>
-                      <h2 className="text-lg font-bold">StagesTogo</h2>
+                      <h2 className="text-lg font-bold">Stage-Link</h2>
                       <p className="text-xs text-muted-foreground">Plateforme de stages</p>
                     </div>
                   </div>
