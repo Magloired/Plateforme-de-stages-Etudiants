@@ -11,8 +11,9 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Loader2, Eye, EyeOff } from "lucide-react";
-import { apiService } from "@/services/api-hybrid";
+
 import { APP_CONFIG } from "@/config/app-config";
+import { apiService } from "@/services/api-hybrid";
 
 const formSchema = z.object({
   email: z.string().email("Email invalide"),
@@ -88,7 +89,7 @@ const AdminLoginForm = () => {
                 ? 'bg-yellow-100 text-yellow-800' 
                 : 'bg-green-100 text-green-800'
             }`}>
-              {APP_CONFIG.IS_MOCK_MODE ? '🔧 Mode Mock' : '🌐 API Réelle'}
+              {APP_CONFIG.IS_MOCK_MODE ? ' Mode Mock' : ' API Réelle'}
             </span>
           </div>
           

@@ -1,9 +1,11 @@
 // types/validation.ts
 
+import { Specialite } from "./entreprise"
+
 /**
- * Enum représentant la décision de validation.
- * Correspond à l'enum backend `DecisionValidation`.
+ * Enum pour représenter les décisions de validation
  */
+
 export enum DecisionValidation {
   Accepte = "Accepte",
   Refuse = "Refuse"
@@ -12,12 +14,13 @@ export enum DecisionValidation {
 /**
  * DTO utilisé lors de la création d'une validation (requête POST).
  * Contient les IDs des entités concernées, la décision et un commentaire optionnel.
+ * IMPORTANT: Les noms des propriétés doivent correspondre exactement au DTO backend C# (PascalCase)
  */
 export interface ValidationCreateDTO {
-  enseignantId: number;
-  candidatureId: number;
-  decision: DecisionValidation;
-  commentaire?: string;
+  EnseignantId: number;
+  CandidatureId: number;
+  Decision: DecisionValidation;
+  Commentaire?: string;
 }
 
 /**

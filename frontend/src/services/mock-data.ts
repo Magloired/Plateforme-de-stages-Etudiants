@@ -521,14 +521,36 @@ export const mockApiService = {
     getStats: async () => {
       await simulateNetworkDelay()
       simulateError(0.05)
+      
+      // Calculer les statistiques par statut
+      const candidaturesParStatut = mockCandidatures.reduce((acc, candidature) => {
+        acc[candidature.statut] = (acc[candidature.statut] || 0) + 1
+        return acc
+      }, {} as Record<StatutCandidature, number>)
+
+      // Calculer les offres par ville
+      const offresParVille = mockOffres.reduce((acc, offre) => {
+        const ville = offre.lieu || "Non spécifié"
+        acc[ville] = (acc[ville] || 0) + 1
+        return acc
+      }, {} as Record<string, number>)
+
+      // Calculer les offres par type
+      const offresParType = mockOffres.reduce((acc, offre) => {
+        const type = offre.typeStage || "Non spécifié"
+        acc[type] = (acc[type] || 0) + 1
+        return acc
+      }, {} as Record<string, number>)
+
       return {
         totalUsers: mockUsers.length,
         totalEntreprises: mockEntreprises.length,
         totalOffres: mockOffres.length,
         totalCandidatures: mockCandidatures.length,
         totalValidations: mockValidations.length,
-        activeOffres: mockOffres.filter(o => o.isActive).length,
-        pendingCandidatures: mockCandidatures.filter(c => c.statut === StatutCandidature.EnAttente).length,
+        candidaturesParStatut,
+        offresParVille,
+        offresParType,
       }
     },
   },

@@ -53,10 +53,10 @@ export const apiService = {
           throw new Error("Email ou mot de passe incorrect");
         }
 
-        return mockApiService.auth?.login?.(credentials) || {
+        return {
           token: "mock-token-123",
           user: {
-            id: 1,
+            id: 8,
             nom: "Admin",
             prenom: "Super",
             email: credentials.email,

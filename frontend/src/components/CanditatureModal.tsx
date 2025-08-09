@@ -1,5 +1,9 @@
 import { CandidatureForm, Stage } from './types';
 import { X, User, Mail, Phone, File } from 'lucide-react';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 interface Props {
   stage: Stage;
@@ -11,124 +15,138 @@ interface Props {
 
 export default function CandidatureModal({ stage, form, onChange, onClose, onSubmit }: Props) {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+      <Card className="max-w-2xl bg-background w-full max-h-[90vh] overflow-y-auto">
+        <CardHeader className="border-b border-border flex flex-row items-center justify-between space-y-0">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Candidature</h2>
-            <p className="text-gray-600">{stage.titre} - {stage.entreprise.nom}</p>
+            <CardTitle className="text-2xl font-bold">Candidature</CardTitle>
+            <p className="text-muted-foreground">{stage.titre} - {stage.entreprise.nom}</p>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full" title="Fermer">
-            <X size={24} />
-          </button>
-        </div>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={onClose} 
+            className="h-8 w-8 rounded-full hover:bg-accent"
+            title="Fermer"
+          >
+            <X size={20} />
+          </Button>
+        </CardHeader>
 
-        <form onSubmit={onSubmit} className="p-6 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="text-sm font-medium text-gray-700 mb-1 block">
-                <User size={16} className="inline mr-2" />Nom *
-              </label>
-              <input
-                type="text"
-                required
-                value={form.nom}
-                onChange={(e) => onChange('nom', e.target.value)}
-                className="w-full border rounded-xl px-4 py-3"
-                placeholder="Votre nom"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-700 mb-1 block">
-                <User size={16} className="inline mr-2" />Prénom *
-              </label>
-              <input
-                type="text"
-                required
-                value={form.prenom}
-                onChange={(e) => onChange('prenom', e.target.value)}
-                className="w-full border rounded-xl px-4 py-3"
-                placeholder="Votre prénom"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="text-sm font-medium text-gray-700 mb-1 block">
-              <Mail size={16} className="inline mr-2" />Email *
-            </label>
-            <input
-              type="email"
-              required
-              value={form.email}
-              onChange={(e) => onChange('email', e.target.value)}
-              className="w-full border rounded-xl px-4 py-3"
-              placeholder="Votre adresse email"
-            />
-          </div>
-
-          <div>
-            <label className="text-sm font-medium text-gray-700 mb-1 block">
-              <Phone size={16} className="inline mr-2" />Téléphone *
-            </label>
-            <input
-              type="tel"
-              required
-              value={form.telephone}
-              onChange={(e) => onChange('telephone', e.target.value)}
-              className="w-full border rounded-xl px-4 py-3"
-              placeholder="Votre numéro de téléphone"
-            />
-          </div>
-
-          <div>
-                <label htmlFor="cv" className="text-sm font-medium text-gray-700 mb-1 block">
-                  <File size={16} className="inline mr-2" />
-                  CV (PDF) *
-                </label>
-                <input
-                  id="cv"
-                  type="file"
-                  accept=".pdf"
+        <CardContent className="p-6">
+          <form onSubmit={onSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label className="text-sm font-medium flex items-center gap-2">
+                  <User size={16} />
+                  Nom *
+                </Label>
+                <Input
+                  type="text"
                   required
-                  title="Sélectionnez votre CV au format PDF"
-                  onChange={(e) => {
-                    if (e.target.files && e.target.files.length > 0) {
-                      onChange('cv', e.target.files[0]);
-                    }
-                  }}
-                  className="w-full border rounded-xl px-4 py-2"
+                  value={form.nom}
+                  onChange={(e) => onChange('nom', e.target.value)}
+                  placeholder="Votre nom"
+                  className="h-12 rounded-xl"
                 />
               </div>
-
-
-              <div>
-                <label htmlFor="lettreMotivation" className="text-sm font-medium text-gray-700 mb-1 block">
-                  <File size={16} className="inline mr-2" />
-                  Lettre de motivation (PDF) *
-                </label>
-                <input
-                  id="lettreMotivation"
-                  type="file"
-                  accept=".pdf"
+              <div className="space-y-2">
+                <Label className="text-sm font-medium flex items-center gap-2">
+                  <User size={16} />
+                  Prénom *
+                </Label>
+                <Input
+                  type="text"
                   required
-                  title="Ajoutez votre lettre de motivation"
-                  onChange={(e) => {
-                    if (e.target.files && e.target.files.length > 0) {
-                      onChange('motivation', e.target.files[0]);
-                    }
-                  }}
-                  className="w-full border rounded-xl px-4 py-2"
+                  value={form.prenom}
+                  onChange={(e) => onChange('prenom', e.target.value)}
+                  placeholder="Votre prénom"
+                  className="h-12 rounded-xl"
                 />
               </div>
+            </div>
 
-          <div className="text-right pt-4">
-            <button type="submit" className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700">
-              Envoyer la candidature
-            </button>
-          </div>
-        </form>
-      </div>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium flex items-center gap-2">
+                <Mail size={16} />
+                Email *
+              </Label>
+              <Input
+                type="email"
+                required
+                value={form.email}
+                onChange={(e) => onChange('email', e.target.value)}
+                placeholder="Votre adresse email"
+                className="h-12 rounded-xl"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-sm font-medium flex items-center gap-2">
+                <Phone size={16} />
+                Téléphone *
+              </Label>
+              <Input
+                type="tel"
+                required
+                value={form.telephone}
+                onChange={(e) => onChange('telephone', e.target.value)}
+                placeholder="Votre numéro de téléphone"
+                className="h-12 rounded-xl"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="cv" className="text-sm font-medium flex items-center gap-2">
+                <File size={16} />
+                CV (PDF) *
+              </Label>
+              <Input
+                id="cv"
+                type="file"
+                accept=".pdf"
+                required
+                title="Sélectionnez votre CV au format PDF"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files.length > 0) {
+                    onChange('cv', e.target.files[0]);
+                  }
+                }}
+                className="h-12 rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/80"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="lettreMotivation" className="text-sm font-medium flex items-center gap-2">
+                <File size={16} />
+                Lettre de motivation (PDF) *
+              </Label>
+              <Input
+                id="lettreMotivation"
+                type="file"
+                accept=".pdf"
+                required
+                title="Ajoutez votre lettre de motivation"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files.length > 0) {
+                    onChange('motivation', e.target.files[0]);
+                  }
+                }}
+                className="h-12 rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/80"
+              />
+            </div>
+
+            <div className="flex justify-end pt-4">
+              <Button 
+                type="submit" 
+                className="px-8 py-3 h-12 rounded-xl font-semibold"
+              >
+                Envoyer la candidature
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

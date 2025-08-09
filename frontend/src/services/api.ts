@@ -311,13 +311,24 @@ export const apiService = {
     },
 
     create: async (validation: ValidationCreateDTO): Promise<ValidationReadDTO> => {
+      console.log("Envoi de validation:", validation)
       const response = await fetch(`${APP_CONFIG.API_BASE_URL}/Validation`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(validation),
       })
       if (!response.ok) {
-        throw new Error("Échec de la création de la validation")
+        console.error("Erreur API Validation:", response.status, response.statusText)
+        
+        // Essayer de récupérer les détails de l'erreur
+        try {
+          const errorDetails = await response.json()
+          console.error("Détails de l'erreur:", errorDetails)
+          throw new Error(errorDetails.message || errorDetails.details || `Échec de la création de la validation (${response.status})`)
+        } catch (parseError) {
+          console.error("Impossible de parser l'erreur:", parseError)
+          throw new Error(`Échec de la création de la validation (${response.status}: ${response.statusText})`)
+        }
       }
       return response.json()
     },

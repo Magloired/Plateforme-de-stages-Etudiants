@@ -192,11 +192,15 @@ export default function RegisterForm() {
                         </div>
                         
                         {/* Indicateur de force du mot de passe */}
+                        
                         {formData.password && (
                         <div className="mt-2">
+                
                             <div className="flex items-center space-x-2">
                             <div className="flex-1 bg-gray-200 rounded-full h-2">
-                                <div
+                        
+                                
+                                <div about="password-strength-indicator" title="password-strength"
                                 className={`h-2 rounded-full transition-all duration-300 ${passwordStrength.color}`}
                                 style={{ width: `${(passwordStrength.score / 5) * 100}%` }}
                                 ></div>

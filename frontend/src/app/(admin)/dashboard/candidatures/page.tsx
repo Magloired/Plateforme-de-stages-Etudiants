@@ -14,6 +14,7 @@ import {
   TableRow 
 } from '@/components/ui/table'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { apiService } from '@/services/api'
@@ -32,6 +33,7 @@ export default function CandidaturesPage() {
     commentaire: ''
   })
   const [isValidating, setIsValidating] = useState(false)
+  const [candidatureToDelete, setCandidatureToDelete] = useState<number | null>(null)
   const queryClient = useQueryClient()
 
   // Requête pour récupérer toutes les candidatures
@@ -45,12 +47,14 @@ export default function CandidaturesPage() {
     mutationFn: (id: number) => apiService.candidatures.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['candidatures'] })
+      setCandidatureToDelete(null)
       toast({
         title: "Succès",
         description: "Candidature supprimée avec succès",
       })
     },
     onError: () => {
+      setCandidatureToDelete(null)
       toast({
         title: "Erreur",
         description: "Erreur lors de la suppression de la candidature",
@@ -102,8 +106,12 @@ export default function CandidaturesPage() {
   }
 
   const handleDeleteCandidature = (id: number) => {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cette candidature ?')) {
-      deleteCandidatureMutation.mutate(id)
+    setCandidatureToDelete(id)
+  }
+
+  const confirmDeleteCandidature = () => {
+    if (candidatureToDelete) {
+      deleteCandidatureMutation.mutate(candidatureToDelete)
     }
   }
 
@@ -119,15 +127,23 @@ export default function CandidaturesPage() {
     setIsValidating(true)
     try {
       const validationPayload: ValidationCreateDTO = {
-        enseignantId: 1, // TODO: Récupérer l'ID de l'enseignant connecté
-        candidatureId: selectedCandidature.id,
-        decision: validationData.decision,
-        commentaire: validationData.commentaire || undefined
+        EnseignantId: 5, 
+        CandidatureId: selectedCandidature.id,
+        Decision: validationData.decision,
+        Commentaire: validationData.commentaire || undefined
       }
+
+      console.log("Payload de validation:", validationPayload)
+      console.log("Candidature sélectionnée:", selectedCandidature)
 
       await createValidationMutation.mutateAsync(validationPayload)
     } catch (error) {
       console.error("Erreur lors de la validation:", error)
+      toast({
+        title: "Erreur",
+        description: error instanceof Error ? error.message : "Erreur lors de la validation",
+        variant: "destructive",
+      })
     } finally {
       setIsValidating(false)
     }
@@ -300,9 +316,7 @@ export default function CandidaturesPage() {
                             >
                               <CheckSquare className="h-4 w-4" />
                             </Button>
-                            <Button variant="ghost" size="sm">
-                              <Edit className="h-4 w-4" />
-                            </Button>
+ 
                             <Button 
                               variant="ghost" 
                               size="sm"
@@ -421,6 +435,27 @@ export default function CandidaturesPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Dialog de confirmation de suppression */}
+      <AlertDialog open={candidatureToDelete !== null} onOpenChange={() => setCandidatureToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
+            <AlertDialogDescription>
+              Êtes-vous sûr de vouloir supprimer cette candidature ? Cette action est irréversible.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmDeleteCandidature}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </ContentLayout>
   )
 }
